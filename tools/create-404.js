@@ -1,0 +1,28 @@
+// Ensures public/404.html exists — it isn't part of the design export, so the
+// pages pipeline (which clears/regenerates public/) must recreate it too.
+const fs = require("fs");
+const path = require("path");
+
+const outPath = path.join(__dirname, "..", "public", "404.html");
+
+const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Page introuvable | JL & Co</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>.bg-jl-dark{background-color:#1a3a52}.text-jl-yellow{color:#FFD700}</style>
+</head>
+<body class="bg-jl-dark text-white min-h-screen flex items-center justify-center">
+<div class="text-center px-6">
+<p class="text-jl-yellow font-bold text-sm tracking-widest uppercase mb-4">Erreur 404</p>
+<h1 class="text-4xl font-bold mb-6">Page introuvable</h1>
+<a href="/index.html" class="px-8 py-4 bg-jl-yellow text-jl-dark font-bold rounded-lg inline-block">Retour à l'accueil</a>
+</div>
+</body>
+</html>
+`;
+
+fs.writeFileSync(outPath, html);
+console.log("Created public/404.html");
