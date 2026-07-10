@@ -39,6 +39,11 @@ node tools/localize-images.js  # remplace les images Unsplash cassées par des i
 ```
 Le résultat est écrit dans `public/`.
 
+## Notes techniques
+- Le site utilise Tailwind CDN avec des couleurs personnalisées (`jl-dark`, `jl-yellow`) définies via `tailwind.config` juste après le script CDN dans chaque page HTML — nécessaire pour que ces classes (ex. `bg-jl-dark/95`) fonctionnent.
+- Les images de la page d'accueil (`hero-solar.jpg`, `commercial-solar.jpg`, `residential-solar.jpg`, `hotel-hybrid.jpg`, `auto-workshop.jpg`) sont générées et présentes dans `public/images/`.
+- D'autres pages (boutique, à propos, services) référencent encore des images manquantes (`product-*.jpg`, `team-photo.jpg`, `services-header.jpg`) — non traité, car hors du périmètre demandé (page d'accueil uniquement).
+
 ## À personnaliser avant mise en production
 - Numéro WhatsApp/téléphone réel (actuellement un placeholder dans `tools/wire-links.js`)
 - Adresse et email de contact réels
