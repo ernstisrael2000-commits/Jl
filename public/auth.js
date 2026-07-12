@@ -146,9 +146,12 @@
     // actions (checkout) require a session; see the panier/paiement guard
     // below.
 
-    // Panier / paiement pages — guard on load once auth resolves
+    // Paiement (checkout / paying) requires an account — but viewing and
+    // editing the cart (panier.html) is open to everyone, guests included,
+    // like any normal e-commerce site. Gating panier.html used to hide the
+    // cart entirely behind a login wall right after adding an item.
     var page = window.location.pathname;
-    var guarded = ['/panier.html', '/paiement.html'];
+    var guarded = ['/paiement.html'];
     if (guarded.some(function(p){ return page.endsWith(p); })) {
       if (_ready && !_currentUser) {
         window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);

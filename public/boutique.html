@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@600;700;800&display=swap">
+  <script src="/cart.js"></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -245,11 +246,11 @@
   };
   var CATEGORY_LABELS = { "": "Tous les produits" };
 
-  var CART_KEY = 'jlco_cart_v1';
   var FAV_KEY = 'jlco_favs_v1';
 
-  function loadCart() { try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; } }
-  function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+  // Panier partagé (localStorage) — voir /cart.js, chargé par cette page.
+  function loadCart() { return window.JLCart.load(); }
+  function saveCart(cart) { window.JLCart.save(cart); }
   function loadFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; } catch (e) { return []; } }
   function saveFavs(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
 
