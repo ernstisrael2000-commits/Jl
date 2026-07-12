@@ -56,6 +56,14 @@ Architecture reconstruite pour ne plus jamais dépendre de l'état local du SDK 
 - Détection des navigateurs intégrés (WhatsApp, Instagram, Messenger…) sur `login.html` : Google y bloque volontairement l'OAuth, donc un avertissement s'affiche pour rediriger vers email/mot de passe.
 - Dans la console Firebase du projet, les fournisseurs **Google** et **Email/Mot de passe** doivent être activés sous Authentication → Sign-in method.
 
+## Paiement Pay'm Plop plop (MonCash / NatCash / Kashpaw)
+Sur `public/paiement.html`, un 3e moyen de paiement « Pay'm Plop plop » a été ajouté à côté de Carte Bancaire / PayPal (ces deux derniers restent des maquettes non fonctionnelles). Contrairement au reste du site, celui-ci est **réellement fonctionnel** :
+- Doc API : https://plopplop.solutionip.app/paiement-doc
+- Secret serveur `PLOPPLOP_CLIENT_ID` (identifiant marchand `pp_...`) — jamais exposé au client.
+- `POST /api/paiement/plopplop` (server.js) crée la transaction (endpoint `/api/paiement-marchand`), enregistre la tentative dans `data/paiements_plopplop.json`, renvoie l'URL de paiement (MonCash/NatCash/Kashpaw) à ouvrir dans un nouvel onglet.
+- `GET /api/paiement/plopplop/statut?refference_id=...` interroge `/api/paiement-verify` — le client sur `paiement.html` poll cet endpoint toutes les 4s après ouverture du paiement et redirige vers `confirmation.html` dès que `trans_status` passe à `ok`.
+- ⚠️ Pay'm Plop plop facture en **HTG** (minimum 20 HTG) alors que le reste du site affiche des prix en **€** — le montant total affiché est envoyé tel quel en HTG pour l'instant ; une vraie conversion de devise reste à faire si le site passe en production avec ce moyen de paiement.
+
 ## À personnaliser avant mise en production
 - Numéro WhatsApp/téléphone réel (actuellement un placeholder dans `tools/wire-links.js`)
 - Adresse et email de contact réels

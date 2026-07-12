@@ -149,7 +149,7 @@ function writeData(name, items) {
 }
 
 // Initialize data files if missing
-["produits", "commandes", "devis", "contacts"].forEach((name) => {
+["produits", "commandes", "devis", "contacts", "paiements_plopplop"].forEach((name) => {
   const file = path.join(DATA_DIR, `${name}.json`);
   if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
 });
@@ -432,6 +432,100 @@ async function handleAPI(req, res, urlPath) {
       items = items.filter((c) => c.id !== id);
       writeData("contacts", items);
       return jsonRes(res, 200, { ok: true });
+    }
+  }
+
+  // ── /api/paiement/plopplop ─────────────────────────────────────────────
+  // Crée une transaction Pay'm Plop plop (MonCash/NatCash/Kashpaw) et renvoie
+  // l'URL de redirection vers laquelle rediriger le client pour payer.
+  if (urlPath === "/api/paiement/plopplop" && method === "POST") {
+    if (!PLOPPLOP_CLIENT_ID) {
+      return jsonRes(res, 503, {
+        error: "Pay'm Plop plop n'est pas configuré sur le serveur (PLOPPLOP_CLIENT_ID manquant).",
+      });
+    }
+    const body = await parseBody(req);
+    const montant = Number(body.montant);
+    const payment_method = ["moncash", "kashpaw", "natcash", "all"].includes(body.payment_method)
+      ? body.payment_method
+      : "all";
+    if (!montant || montant < 20) {
+      return jsonRes(res, 400, { error: "Montant invalide (minimum 20 HTG)." });
+    }
+    const refference_id = `JLCO-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`;
+    try {
+      const apiRes = await fetch(`${PLOPPLOP_BASE_URL}/api/paiement-marchand`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: PLOPPLOP_CLIENT_ID,
+          refference_id,
+          montant,
+          payment_method,
+        }),
+      });
+      const data = await apiRes.json().catch(() => ({}));
+      if (!apiRes.ok || !data.status) {
+        return jsonRes(res, apiRes.status || 502, {
+          error: data.message || "Échec de création de la transaction Pay'm Plop plop.",
+        });
+      }
+      const items = readData("paiements_plopplop");
+      items.unshift({
+        refference_id,
+        transaction_id: data.transaction_id,
+        montant,
+        payment_method,
+        commande: body.commande || null,
+        trans_status: "no",
+        createdAt: new Date().toISOString(),
+      });
+      writeData("paiements_plopplop", items);
+      return jsonRes(res, 200, {
+        ok: true,
+        url: data.url,
+        transaction_id: data.transaction_id,
+        refference_id,
+      });
+    } catch (e) {
+      console.error("[Plop plop] Échec de création de transaction:", e.message);
+      return jsonRes(res, 502, { error: "Impossible de contacter Pay'm Plop plop." });
+    }
+  }
+
+  // GET /api/paiement/plopplop/statut?refference_id=... — vérifie l'état
+  // d'une transaction déjà créée (à interroger périodiquement côté client).
+  if (urlPath === "/api/paiement/plopplop/statut" && method === "GET") {
+    if (!PLOPPLOP_CLIENT_ID) {
+      return jsonRes(res, 503, { error: "Pay'm Plop plop n'est pas configuré sur le serveur." });
+    }
+    const refference_id = new URL(req.url, "http://localhost").searchParams.get("refference_id");
+    if (!refference_id) return jsonRes(res, 400, { error: "refference_id manquant" });
+    try {
+      const apiRes = await fetch(`${PLOPPLOP_BASE_URL}/api/paiement-verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: PLOPPLOP_CLIENT_ID, refference_id }),
+      });
+      const data = await apiRes.json().catch(() => ({}));
+      if (!apiRes.ok || !data.status) {
+        return jsonRes(res, apiRes.status || 502, {
+          error: data.message || "Échec de vérification de la transaction.",
+        });
+      }
+      const items = readData("paiements_plopplop");
+      const updated = items.map((p) =>
+        p.refference_id === refference_id ? { ...p, trans_status: data.trans_status } : p
+      );
+      writeData("paiements_plopplop", updated);
+      return jsonRes(res, 200, {
+        trans_status: data.trans_status,
+        montant: data.montant,
+        method: data.method,
+      });
+    } catch (e) {
+      console.error("[Plop plop] Échec de vérification:", e.message);
+      return jsonRes(res, 502, { error: "Impossible de contacter Pay'm Plop plop." });
     }
   }
 
