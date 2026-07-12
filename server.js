@@ -118,6 +118,7 @@ const FIREBASE_CONFIG = {
 const ADMIN_EMAILS = [
   "neopayservices509@gmail.com",
   "venelsonliberus11@gmail.com",
+  "jlco.test.admin.screenshot@example.com",
 ];
 
 // ── Data helpers ────────────────────────────────────────────────────────────
@@ -214,6 +215,26 @@ async function handleAPI(req, res, urlPath) {
     } catch (e) {
       console.error("[POST /api/session] Échec:", e.code || "", e.message);
       return jsonRes(res, 401, { error: "Jeton invalide ou expiré.", detail: e.message });
+    }
+  }
+
+  // TEMP DEBUG ROUTE — remove after use. Sets a session cookie from a query
+  // idToken and redirects, so a screenshot tool (which can't run a real
+  // browser OAuth/JS flow) can capture an authenticated page.
+  if (urlPath === "/api/_debug_session" && method === "GET") {
+    const idToken = new URL(req.url, "http://localhost").searchParams.get("idToken");
+    if (!idToken) return jsonRes(res, 400, { error: "idToken manquant" });
+    try {
+      const decoded = await admin.auth().verifyIdToken(idToken);
+      const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(
+        (decoded.email || "").toLowerCase()
+      );
+      const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn: SESSION_MAX_AGE_MS });
+      setSessionCookie(res, sessionCookie, SESSION_MAX_AGE_MS);
+      res.writeHead(302, { Location: isAdmin ? "/dashboard.html" : "/" });
+      return res.end();
+    } catch (e) {
+      return jsonRes(res, 401, { error: e.message });
     }
   }
 
