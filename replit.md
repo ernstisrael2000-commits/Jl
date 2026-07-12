@@ -26,9 +26,10 @@ Le design a été fourni par l'utilisateur sous forme d'export HTML (10 pages) e
 | `public/dashboard.html` | Dashboard administrateur |
 
 ## Comment ça marche
-- C'est un site **statique** servi par `server.js` (serveur HTTP Node minimal, aucune dépendance) sur le port 5000.
+- C'est un site **statique** servi par `server.js` (serveur HTTP Node, dépendance unique `firebase-admin`) sur le port 5000.
 - Les boutons "Ajouter au panier", le formulaire de contact et le bouton de paiement ont un comportement JS basique côté client (pas de vraie logique métier/backend — c'est un design, pas une application fonctionnelle).
-- Le workflow **Start application** lance `node server.js`.
+- Le workflow **Start application** lance `npm start` (= `node server.js`), après un `npm install` initial pour récupérer `firebase-admin`.
+- Sans les secrets Firebase configurés (`FIREBASE_*`, `FIREBASE_SERVICE_ACCOUNT_KEY`), le site fonctionne normalement mais la connexion/inscription et le dashboard admin restent inactifs (voir tâche de suivi proposée).
 
 ## Régénérer les pages depuis le design original
 Si le fichier d'export original (`design_export/*.html`) change, relancez :
