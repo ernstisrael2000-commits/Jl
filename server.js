@@ -9,8 +9,14 @@ const DATA_DIR = path.join(__dirname, "data");
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 // ── Firebase config (from env vars) ────────────────────────────────────────
+// Guard: FIREBASE_API_KEY must be the short web API key (AIzaSy…), NOT a
+// service-account JSON blob.  If someone pastes the whole JSON, treat as
+// unconfigured so the UI shows the helpful setup warning instead of crashing.
+const _rawApiKey = process.env.FIREBASE_API_KEY || "";
+const _apiKey = _rawApiKey.trimStart().startsWith("{") ? "" : _rawApiKey;
+
 const FIREBASE_CONFIG = {
-  apiKey: process.env.FIREBASE_API_KEY || "",
+  apiKey: _apiKey,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN || "",
   projectId: process.env.FIREBASE_PROJECT_ID || "",
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
