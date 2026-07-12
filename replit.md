@@ -44,6 +44,12 @@ Le résultat est écrit dans `public/`.
 - Les images de la page d'accueil (`hero-solar.jpg`, `commercial-solar.jpg`, `residential-solar.jpg`, `hotel-hybrid.jpg`, `auto-workshop.jpg`) sont générées et présentes dans `public/images/`.
 - D'autres pages (boutique, à propos, services) référencent encore des images manquantes (`product-*.jpg`, `team-photo.jpg`, `services-header.jpg`) — non traité, car hors du périmètre demandé (page d'accueil uniquement).
 
+## Authentification (Firebase)
+- Le site utilise Firebase Authentication (Google + Email/Mot de passe), configuré via les secrets Replit `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`.
+- Le serveur expose la config publique (clé API web, non sensible) via `GET /api/config`.
+- Les comptes admin (accès `dashboard.html`) sont définis en dur dans `server.js` (`ADMIN_EMAILS`) — tout autre compte est un client normal.
+- Dans la console Firebase du projet, les fournisseurs **Google** et **Email/Mot de passe** doivent être activés sous Authentication → Sign-in method (à vérifier côté utilisateur si la connexion échoue).
+
 ## À personnaliser avant mise en production
 - Numéro WhatsApp/téléphone réel (actuellement un placeholder dans `tools/wire-links.js`)
 - Adresse et email de contact réels
