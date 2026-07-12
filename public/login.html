@@ -77,13 +77,27 @@
         <div class="flex-1 h-px bg-slate-200"></div>
       </div>
 
-      <!-- Email/Password form -->
+      <!-- Sign in / Sign up tabs -->
+      <div class="flex bg-slate-100 rounded-2xl p-1 mb-6">
+        <button type="button" id="tab-signin" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all bg-white text-jl-dark shadow">Se connecter</button>
+        <button type="button" id="tab-signup" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all text-slate-500">Créer un compte</button>
+      </div>
+
+      <!-- Email/Password form (shared by sign-in and sign-up) -->
       <form id="login-form" class="space-y-4">
+        <div id="name-field" class="hidden">
+          <label class="block text-sm font-bold text-jl-dark mb-2">Nom</label>
+          <div class="relative">
+            <iconify-icon icon="lucide:user" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
+            <input id="name" type="text" placeholder="Votre nom"
+              class="w-full pl-11 pr-4 py-4 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+          </div>
+        </div>
         <div>
           <label class="block text-sm font-bold text-jl-dark mb-2">Email</label>
           <div class="relative">
             <iconify-icon icon="lucide:mail" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
-            <input id="email" type="email" placeholder="admin@exemple.com" required
+            <input id="email" type="email" placeholder="vous@exemple.com" required
               class="w-full pl-11 pr-4 py-4 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
           </div>
         </div>
@@ -91,12 +105,13 @@
           <label class="block text-sm font-bold text-jl-dark mb-2">Mot de passe</label>
           <div class="relative">
             <iconify-icon icon="lucide:lock" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
-            <input id="password" type="password" placeholder="••••••••" required
+            <input id="password" type="password" placeholder="••••••••" required minlength="6"
               class="w-full pl-11 pr-12 py-4 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
             <button type="button" id="toggle-pw" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
               <iconify-icon icon="lucide:eye" id="eye-icon"></iconify-icon>
             </button>
           </div>
+          <p id="pw-hint" class="hidden text-xs text-slate-400 mt-1.5">Au moins 6 caractères.</p>
         </div>
         <button type="submit" id="login-btn"
           class="w-full py-4 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg flex items-center justify-center gap-2">
@@ -106,8 +121,8 @@
         </button>
       </form>
 
-      <!-- Forgot password / set a password -->
-      <div class="mt-4 text-center">
+      <!-- Forgot password / set a password (sign-in mode only) -->
+      <div class="mt-4 text-center" id="forgot-pw-wrap">
         <button id="forgot-pw-btn" type="button" class="text-sm text-slate-500 hover:text-jl-dark transition-colors underline">
           Mot de passe oublié ou pas encore défini ?
         </button>
@@ -141,7 +156,10 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import {
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile,
+      signInWithRedirect, getRedirectResult, GoogleAuthProvider, sendPasswordResetEmail,
+    } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
     // Detect embedded/in-app browsers (WhatsApp, Instagram, Facebook, Messenger,
     // TikTok, Line…) where Google explicitly blocks OAuth sign-in for security
@@ -163,6 +181,13 @@
     const loginBtnText = document.getElementById('login-btn-text');
     const loginBtnIcon = document.getElementById('login-btn-icon');
     const loginBtnLoader = document.getElementById('login-btn-loader');
+    const tabSignin = document.getElementById('tab-signin');
+    const tabSignup = document.getElementById('tab-signup');
+    const nameField = document.getElementById('name-field');
+    const pwHint = document.getElementById('pw-hint');
+    const forgotPwWrap = document.getElementById('forgot-pw-wrap');
+
+    let mode = 'signin'; // 'signin' | 'signup'
 
     function showError(msg) {
       errorEl.textContent = msg;
@@ -176,10 +201,31 @@
     }
     function setLoading(loading) {
       loginBtn.disabled = loading;
-      loginBtnText.textContent = loading ? 'Connexion...' : 'Se connecter';
+      loginBtnText.textContent = loading ? 'Patientez...' : (mode === 'signup' ? 'Créer mon compte' : 'Se connecter');
       loginBtnIcon.classList.toggle('hidden', loading);
       loginBtnLoader.classList.toggle('hidden', !loading);
     }
+
+    function setMode(next) {
+      mode = next;
+      errorEl.classList.add('hidden');
+      successEl.classList.add('hidden');
+      const isSignup = mode === 'signup';
+      tabSignin.classList.toggle('bg-white', !isSignup);
+      tabSignin.classList.toggle('shadow', !isSignup);
+      tabSignin.classList.toggle('text-jl-dark', !isSignup);
+      tabSignin.classList.toggle('text-slate-500', isSignup);
+      tabSignup.classList.toggle('bg-white', isSignup);
+      tabSignup.classList.toggle('shadow', isSignup);
+      tabSignup.classList.toggle('text-jl-dark', isSignup);
+      tabSignup.classList.toggle('text-slate-500', !isSignup);
+      nameField.classList.toggle('hidden', !isSignup);
+      pwHint.classList.toggle('hidden', !isSignup);
+      forgotPwWrap.classList.toggle('hidden', isSignup);
+      loginBtnText.textContent = isSignup ? 'Créer mon compte' : 'Se connecter';
+    }
+    tabSignin.addEventListener('click', () => setMode('signin'));
+    tabSignup.addEventListener('click', () => setMode('signup'));
 
     // Toggle password visibility
     document.getElementById('toggle-pw').addEventListener('click', () => {
@@ -191,11 +237,10 @@
     });
 
     // Fetch config from server
-    let auth, provider, adminEmails = [], adminSessionsEnabled = false;
+    let auth, provider, adminEmails = [];
     try {
       const cfg = await fetch('/api/config').then(r => r.json());
       adminEmails = cfg.adminEmails || [];
-      adminSessionsEnabled = !!cfg.adminSessionsEnabled;
 
       if (!cfg.configured || !cfg.firebase.apiKey) {
         configWarn.classList.remove('hidden');
@@ -211,34 +256,34 @@
         try {
           const redirectCred = await getRedirectResult(auth);
           if (redirectCred && redirectCred.user) {
-            await redirectAfterLogin(redirectCred.user);
+            await establishSession(redirectCred.user);
           }
         } catch (redirectErr) {
+          console.error('[JLAuth] getRedirectResult error:', redirectErr);
           showError('Erreur lors de la connexion Google. Réessayez.');
         }
-
-        // Already logged in?
-        onAuthStateChanged(auth, user => {
-          if (user) redirectAfterLogin(user);
-        });
       }
     } catch(e) {
       showError('Impossible de contacter le serveur.');
     }
 
-    // Helper: exchange the Firebase ID token for a secure server-verified
-    // admin session (httpOnly cookie) before redirecting into the dashboard.
-    // This is what actually decides admin access now — never the client.
-    async function redirectAfterLogin(user) {
-      const next = new URLSearchParams(window.location.search).get('next') || '/';
-      const looksLikeAdmin = adminEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
-
-      if (!looksLikeAdmin || !adminSessionsEnabled) {
-        showSuccess('Connexion réussie ! Redirection...');
-        setTimeout(() => window.location.href = next, 600);
-        return;
+    // Already have a valid server session? Skip straight past the login page.
+    try {
+      const who = await fetch('/api/whoami', { credentials: 'include' }).then(r => r.ok ? r.json() : null);
+      if (who && who.email) {
+        const next = new URLSearchParams(window.location.search).get('next') || '/';
+        window.location.href = who.isAdmin ? '/dashboard.html' : next;
       }
+    } catch (e) { /* not logged in — stay on the page */ }
 
+    // Core of the new auth architecture: after ANY successful Firebase sign-in
+    // (Google, email/password, or brand-new signup), exchange the ID token for
+    // a first-party httpOnly session cookie. From this point on, the whole
+    // site trusts that cookie (via /api/whoami) — never the client SDK's own
+    // state — which is what makes this reliable across popups, redirects,
+    // and mobile/in-app browsers.
+    async function establishSession(user) {
+      const next = new URLSearchParams(window.location.search).get('next') || '/';
       try {
         const idToken = await user.getIdToken(true);
         const resp = await fetch('/api/session', {
@@ -248,15 +293,15 @@
           body: JSON.stringify({ idToken }),
         });
         const data = await resp.json();
-        if (resp.ok && data.isAdmin) {
-          showSuccess('Connexion réussie ! Redirection...');
-          setTimeout(() => window.location.href = '/dashboard.html', 600);
-        } else {
-          console.warn('[JLAuth] /api/session a refusé la session admin:', resp.status, data);
-          // Not recognized as admin server-side — send to the normal destination
-          showSuccess('Connexion réussie ! Redirection...');
-          setTimeout(() => window.location.href = next, 600);
+        if (!resp.ok) {
+          console.error('[JLAuth] /api/session a échoué:', resp.status, data);
+          showError(data.error === 'idToken manquant'
+            ? 'Erreur interne, réessayez.'
+            : 'Impossible de créer la session sécurisée. Réessayez.');
+          return;
         }
+        showSuccess('Connexion réussie ! Redirection...');
+        setTimeout(() => window.location.href = data.isAdmin ? '/dashboard.html' : next, 500);
       } catch (e) {
         console.error('[JLAuth] Échec de /api/session:', e);
         showError('Impossible de créer la session sécurisée. Réessayez.');
@@ -270,7 +315,7 @@
       if (!auth) return;
       errorEl.classList.add('hidden');
       if (isInAppBrowser()) {
-        showError("Google bloque la connexion dans ce navigateur intégré. Ouvrez cette page dans Chrome/Safari, ou utilisez l'email et le mot de passe ci-dessous.");
+        showError("Google bloque la connexion dans ce navigateur intégré. Ouvrez cette page dans Chrome/Safari, ou créez un compte avec email + mot de passe ci-dessous.");
         return;
       }
       try {
@@ -303,25 +348,41 @@
       }
     });
 
-    // Email/password sign-in (open to all users)
+    // Email/password sign-in AND sign-up (same form, driven by the active tab)
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!auth) return;
       errorEl.classList.add('hidden');
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value.trim();
       setLoading(true);
       try {
-        const cred = await signInWithEmailAndPassword(auth, email, password);
-        redirectAfterLogin(cred.user);
+        if (mode === 'signup') {
+          const cred = await createUserWithEmailAndPassword(auth, email, password);
+          if (name) {
+            try { await updateProfile(cred.user, { displayName: name }); } catch (e) {}
+          }
+          await establishSession(cred.user);
+        } else {
+          const cred = await signInWithEmailAndPassword(auth, email, password);
+          await establishSession(cred.user);
+        }
       } catch(err) {
         setLoading(false);
         if (['auth/user-not-found','auth/wrong-password','auth/invalid-credential'].includes(err.code)) {
           showError('Email ou mot de passe incorrect.');
         } else if (err.code === 'auth/too-many-requests') {
           showError('Trop de tentatives. Réessayez dans quelques minutes.');
+        } else if (err.code === 'auth/email-already-in-use') {
+          showError('Un compte existe déjà avec cet email. Utilisez "Se connecter".');
+          setMode('signin');
+        } else if (err.code === 'auth/weak-password') {
+          showError('Mot de passe trop court (6 caractères minimum).');
+        } else if (err.code === 'auth/invalid-email') {
+          showError('Adresse email invalide.');
         } else {
-          showError('Erreur de connexion : ' + err.message);
+          showError('Erreur : ' + err.message);
         }
       }
     });

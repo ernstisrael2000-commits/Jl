@@ -32,7 +32,7 @@ try {
   console.error("[Firebase Admin] Échec d'initialisation:", e.message);
 }
 
-const SESSION_COOKIE_NAME = "jl_admin_session";
+const SESSION_COOKIE_NAME = "jl_session";
 const SESSION_MAX_AGE_MS = 5 * 24 * 60 * 60 * 1000; // 5 jours
 
 function parseCookies(req) {
@@ -69,9 +69,12 @@ function clearSessionCookie(res) {
   );
 }
 
-// Verifies the session cookie against Firebase Admin and checks the email is
-// in ADMIN_EMAILS. Returns the decoded token or null.
-async function getAdminSession(req) {
+// Verifies the session cookie against Firebase Admin. Works for ANY signed-in
+// user (customer or admin) — this is the single source of truth for "who is
+// logged in" across the whole site, replacing the old client-only Firebase
+// state checks that were unreliable (popups/webviews/redirect races).
+// Returns { email, uid, isAdmin } or null.
+async function getSession(req) {
   if (!firebaseAdminApp) return null;
   const cookies = parseCookies(req);
   const sessionCookie = cookies[SESSION_COOKIE_NAME];
@@ -80,13 +83,20 @@ async function getAdminSession(req) {
     const decoded = await admin
       .auth()
       .verifySessionCookie(sessionCookie, true /* checkRevoked */);
-    if (!ADMIN_EMAILS.map((e) => e.toLowerCase()).includes((decoded.email || "").toLowerCase())) {
-      return null;
-    }
-    return decoded;
+    const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(
+      (decoded.email || "").toLowerCase()
+    );
+    return { email: decoded.email, uid: decoded.uid, isAdmin };
   } catch {
     return null;
   }
+}
+
+// Same as getSession, but only returns a result for verified admins — used to
+// gate /dashboard.html and admin-only API routes.
+async function getAdminSession(req) {
+  const session = await getSession(req);
+  return session && session.isAdmin ? session : null;
 }
 
 // ── Firebase config (from env vars) ────────────────────────────────────────
@@ -179,9 +189,10 @@ async function handleAPI(req, res, urlPath) {
     });
   }
 
-  // POST /api/session — exchange a Firebase ID token for a secure, httpOnly
-  // admin session cookie. Verified server-side via the Firebase Admin SDK,
-  // so the client can never fake admin access.
+  // POST /api/session — exchange a Firebase ID token (from ANY successful
+  // sign-in: Google, email/password, or fresh signup) for a secure, httpOnly
+  // session cookie. This is the single source of truth for "logged in" across
+  // the whole site — the client SDK's own state is never trusted directly.
   if (urlPath === "/api/session" && method === "POST") {
     if (!firebaseAdminApp) {
       return jsonRes(res, 503, {
@@ -195,25 +206,22 @@ async function handleAPI(req, res, urlPath) {
       const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(
         (decoded.email || "").toLowerCase()
       );
-      if (!isAdmin) {
-        return jsonRes(res, 403, { error: "not_admin", isAdmin: false });
-      }
       const sessionCookie = await admin
         .auth()
         .createSessionCookie(body.idToken, { expiresIn: SESSION_MAX_AGE_MS });
       setSessionCookie(res, sessionCookie, SESSION_MAX_AGE_MS);
-      return jsonRes(res, 200, { ok: true, isAdmin: true, email: decoded.email });
+      return jsonRes(res, 200, { ok: true, isAdmin, email: decoded.email });
     } catch (e) {
       console.error("[POST /api/session] Échec:", e.code || "", e.message);
       return jsonRes(res, 401, { error: "Jeton invalide ou expiré.", detail: e.message });
     }
   }
 
-  // GET /api/whoami — current admin session, if any
+  // GET /api/whoami — current session (any logged-in user), if any
   if (urlPath === "/api/whoami" && method === "GET") {
-    const session = await getAdminSession(req);
+    const session = await getSession(req);
     if (!session) return jsonRes(res, 401, { error: "not_authenticated" });
-    return jsonRes(res, 200, { email: session.email, isAdmin: true });
+    return jsonRes(res, 200, { email: session.email, isAdmin: session.isAdmin });
   }
 
   // POST /api/logout — clear the admin session cookie

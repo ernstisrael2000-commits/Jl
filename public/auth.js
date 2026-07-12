@@ -1,47 +1,33 @@
 /**
  * JL & Co — Module d'authentification partagé
  * Chargé sur toutes les pages. Gère :
- *   - Initialisation Firebase
- *   - État de connexion (client ou admin)
+ *   - État de connexion (basé sur la session serveur, jamais sur le SDK client)
  *   - Mise à jour du nav (desktop + burger)
  *   - Vue portail sur la homepage
  *   - Guards sur les boutons d'action
+ *
+ * Architecture : après connexion sur /login.html, le serveur émet un cookie de
+ * session httpOnly vérifié par le SDK Admin Firebase. Cette page (et toutes
+ * les autres) ne fait plus jamais confiance à l'état local du SDK client
+ * (onAuthStateChanged) — trop fragile face aux popups bloquées, aux
+ * navigateurs intégrés (WhatsApp, Instagram…) et aux redirections OAuth.
+ * La seule source de vérité est GET /api/whoami, qui lit ce cookie côté
+ * serveur.
  */
 (function () {
   'use strict';
 
-  var FIREBASE_APP_CDN  = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';
-  var FIREBASE_AUTH_CDN = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js';
-
-  var _auth        = null;
-  var _currentUser = null;
-  var _adminEmails = [];
+  var _currentUser = null; // { email, isAdmin } | null
   var _ready       = false;
 
   /* ─── Helpers ──────────────────────────────────────────────────────────── */
-  function loadScript(src) {
-    return new Promise(function (resolve) {
-      if (document.querySelector('script[src="' + src + '"]')) return resolve();
-      var s = document.createElement('script');
-      s.src = src; s.onload = resolve; s.onerror = resolve;
-      document.head.appendChild(s);
-    });
-  }
-
   function isAdmin(user) {
-    if (!user) return false;
-    return _adminEmails.map(function(e){ return e.toLowerCase(); })
-                       .indexOf(user.email.toLowerCase()) > -1;
+    return !!(user && user.isAdmin);
   }
 
   function displayName(user) {
     if (!user) return '';
-    return (user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0]);
-  }
-
-  function getNext() {
-    var p = new URLSearchParams(window.location.search);
-    return p.get('next') || '/';
+    return user.email.split('@')[0];
   }
 
   /* ─── Nav — desktop ────────────────────────────────────────────────────── */
@@ -186,62 +172,38 @@
     var page = window.location.pathname;
     var guarded = ['/panier.html', '/paiement.html'];
     if (guarded.some(function(p){ return page.endsWith(p); })) {
-      var TIMEOUT = 4000;
-      var timer = setTimeout(function () {
-        if (!_ready && !_currentUser) {
-          window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);
-        }
-      }, TIMEOUT);
-      document.addEventListener('jlauth:ready', function () {
-        clearTimeout(timer);
-        if (!_currentUser) {
-          window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);
-        }
-      }, { once: true });
+      if (_ready && !_currentUser) {
+        window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);
+      } else if (!_ready) {
+        document.addEventListener('jlauth:ready', function () {
+          if (!_currentUser) {
+            window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);
+          }
+        }, { once: true });
+      }
     }
   }
 
   /* ─── Core init ─────────────────────────────────────────────────────────── */
   async function init() {
-    var cfg;
-    try {
-      cfg = await fetch('/api/config').then(function(r){ return r.json(); });
-      _adminEmails = cfg.adminEmails || [];
-    } catch(e) {
-      console.warn('[JLAuth] config fetch failed'); return;
-    }
-
     // Always render logged-out nav first so there's no flash
     updateDesktopNav(null);
     updateMobileNav(null);
     updateHomepage(null);
 
-    if (!cfg.configured || !cfg.firebase.apiKey) {
-      _ready = true;
-      document.dispatchEvent(new CustomEvent('jlauth:ready', { detail: { user: null } }));
-      return;
-    }
-
-    await loadScript(FIREBASE_APP_CDN);
-    await loadScript(FIREBASE_AUTH_CDN);
-
     try {
-      // Avoid double-init if login.html already initialized Firebase
-      var app = firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg.firebase);
-      _auth = firebase.auth(app);
-      _auth.onAuthStateChanged(function (user) {
-        _currentUser = user;
-        _ready = true;
-        updateDesktopNav(user);
-        updateMobileNav(user);
-        updateHomepage(user);
-        document.dispatchEvent(new CustomEvent('jlauth:ready', { detail: { user: user } }));
-      });
-    } catch(e) {
-      console.warn('[JLAuth] Firebase init error:', e);
-      _ready = true;
-      document.dispatchEvent(new CustomEvent('jlauth:ready', { detail: { user: null } }));
+      var resp = await fetch('/api/whoami', { credentials: 'include' });
+      _currentUser = resp.ok ? await resp.json() : null;
+    } catch (e) {
+      console.warn('[JLAuth] whoami fetch failed:', e);
+      _currentUser = null;
     }
+
+    _ready = true;
+    updateDesktopNav(_currentUser);
+    updateMobileNav(_currentUser);
+    updateHomepage(_currentUser);
+    document.dispatchEvent(new CustomEvent('jlauth:ready', { detail: { user: _currentUser } }));
   }
 
   /* ─── Public API ────────────────────────────────────────────────────────── */
@@ -257,8 +219,9 @@
       return true;
     },
     signOut: function () {
-      if (_auth) _auth.signOut().then(function(){ window.location.href = '/'; });
-      else window.location.href = '/';
+      fetch('/api/logout', { method: 'POST', credentials: 'include' })
+        .catch(function () {})
+        .then(function () { window.location.href = '/'; });
     },
   };
 
