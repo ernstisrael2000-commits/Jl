@@ -123,7 +123,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getAuth, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
     const errorEl = document.getElementById('error-msg');
     const successEl = document.getElementById('success-msg');
@@ -176,6 +176,16 @@
         auth = getAuth(app);
         provider = new GoogleAuthProvider();
 
+        // Coming back from a Google redirect sign-in (mobile-safe flow)
+        try {
+          const redirectCred = await getRedirectResult(auth);
+          if (redirectCred && redirectCred.user) {
+            redirectAfterLogin(redirectCred.user);
+          }
+        } catch (redirectErr) {
+          showError('Erreur lors de la connexion Google. Réessayez.');
+        }
+
         // Already logged in?
         onAuthStateChanged(auth, user => {
           if (user) {
@@ -200,15 +210,15 @@
       setTimeout(() => window.location.href = dest, 600);
     }
 
-    // Google sign-in (open to all users)
+    // Google sign-in (open to all users) — uses a full-page redirect instead of a
+    // popup because popups are unreliable/blocked on many mobile browsers, which
+    // was leaving admins stuck on the dashboard's "Vérification de l'accès" screen.
     document.getElementById('google-btn').addEventListener('click', async () => {
       if (!auth) return;
       errorEl.classList.add('hidden');
       try {
-        const cred = await signInWithPopup(auth, provider);
-        redirectAfterLogin(cred.user);
+        await signInWithRedirect(auth, provider);
       } catch(err) {
-        if (err.code === 'auth/popup-closed-by-user') return;
         showError('Erreur lors de la connexion Google. Réessayez.');
       }
     });
