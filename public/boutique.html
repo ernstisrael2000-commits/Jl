@@ -1,385 +1,302 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boutique | JL & Co Solutions Énergétiques</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Satoshi', sans-serif; }
-    h1,h2,h3,h4 { font-family: 'Clash Grotesk', sans-serif; }
-    .bg-jl-dark  { background-color: #1a3a52; }
-    .text-jl-yellow { color: #FFD700; }
-    .bg-jl-yellow   { background-color: #FFD700; }
-    .border-jl-yellow { border-color: #FFD700; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #1a3a52; border-radius: 10px; }
-
-    /* Cart drawer */
-    #cart-drawer { transition: transform .35s cubic-bezier(.4,0,.2,1); }
-    #cart-drawer.open { transform: translateX(0); }
-    #cart-overlay { transition: opacity .3s ease; }
-    #cart-overlay.open { opacity: 1; pointer-events: auto; }
-
-    /* Category pill active */
-    .cat-pill.active {
-      background-color: #1a3a52;
-      color: #FFD700;
-      border-color: #1a3a52;
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Manrope:wght@600;700;800&display=swap">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0f5132",
+            "primary-container": "#0f5132",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#84c39b",
+            "primary-fixed-dim": "#95d4ac",
+            "secondary": "#0060ab",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#4ca0ff",
+            "on-secondary-container": "#003664",
+            "secondary-fixed": "#d3e3ff",
+            "surface": "#f9f9fc",
+            "background": "#f9f9fc",
+            "on-surface": "#1a1c1e",
+            "on-background": "#1a1c1e",
+            "on-surface-variant": "#404942",
+            "surface-variant": "#e2e2e5",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f6",
+            "surface-container": "#eeeef0",
+            "surface-container-high": "#e8e8ea",
+            "surface-container-highest": "#e2e2e5",
+            "surface-dim": "#dadadc",
+            "outline": "#707971",
+            "outline-variant": "#c0c9c0",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "jl-yellow": "#FFD700"
+          },
+          borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          spacing: {
+            base: "8px", "stack-sm": "8px", "stack-md": "16px", "stack-lg": "32px",
+            "container-max": "1280px", "margin-mobile": "20px", "margin-desktop": "48px", "gutter-desktop": "24px"
+          },
+          fontFamily: {
+            "headline-xl": ["Manrope"], "headline-lg": ["Manrope"], "headline-md": ["Manrope"],
+            "headline-lg-mobile": ["Manrope"], "body-lg": ["Inter"], "body-md": ["Inter"],
+            "body-sm": ["Inter"], "label-bold": ["Inter"], "technical-data": ["Inter"]
+          },
+          fontSize: {
+            "headline-xl": ["48px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-lg": ["32px", { lineHeight: "1.25", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "1.3", fontWeight: "700" }],
+            "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "label-bold": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "700" }],
+            "technical-data": ["14px", { lineHeight: "1.4", fontWeight: "500" }]
+          }
+        }
+      }
     }
-    /* Product card hover */
+  </script>
+  <style>
+    body { min-height: max(884px, 100dvh); font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; }
+    .cat-link.active { background-color: #d3e3ff; color: #003664; font-weight: 700; }
     .product-card { transition: box-shadow .25s, transform .25s; }
-    .product-card:hover { box-shadow: 0 20px 60px rgba(26,58,82,.12); transform: translateY(-4px); }
-
-    /* Toast */
+    .product-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); }
+    .fav-btn.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; color: #ba1a1a; }
     #toast-cart { transition: opacity .3s, transform .3s; }
+    .bottom-nav-item.active { background-color: #b0f1c7; color: #002111; }
   </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col pt-16 pb-24 md:pb-0">
 
-<!-- ══════════════════ NAV ══════════════════ -->
-<div>
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <a href="index.html" id="nav-logo" class="flex items-center gap-2 group">
-      <div class="w-10 h-10 bg-[#1a3a52] rounded-lg flex items-center justify-center group-hover:bg-[#FFD700] transition-colors">
-        <iconify-icon icon="lucide:zap" class="text-white group-hover:text-[#1a3a52] text-xl"></iconify-icon>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto left-0 right-0">
+  <div class="flex items-center gap-3">
+    <button id="mobile-menu-btn" aria-label="Menu" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-150 md:hidden">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-size:18px;">bolt</span>
       </div>
-      <span class="text-2xl font-bold tracking-tight text-[#1a3a52]">JL <span class="text-[#FFD700]">&</span> Co</span>
+      <h1 class="font-headline-md text-headline-md font-bold text-primary">JL <span class="text-on-surface">&amp; Co</span></h1>
     </a>
-    <nav class="hidden lg:flex items-center gap-8">
-      <a href="index.html"    class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Accueil</a>
-      <a href="services.html" class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Services</a>
-      <a href="boutique.html" class="font-medium text-[#1a3a52] font-bold transition-colors">Boutique</a>
-      <a href="apropos.html"  class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">À propos</a>
-      <a href="contact.html"  class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Contact</a>
-    </nav>
-    <div class="flex items-center gap-3">
-      <a href="https://wa.me/50937257586" id="nav-whatsapp" class="hidden lg:flex items-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50 transition-all">
-        <iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span>
-      </a>
-      <!-- Cart button -->
-      <button id="cart-btn" class="relative flex items-center justify-center w-11 h-11 rounded-full bg-jl-dark text-white hover:bg-jl-yellow hover:text-jl-dark transition-all" aria-label="Panier">
-        <iconify-icon icon="lucide:shopping-cart" class="text-xl"></iconify-icon>
-        <span id="cart-count" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
-      </button>
-      <button id="mobile-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu-panel" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors">
-        <iconify-icon icon="lucide:menu" class="text-2xl text-[#1a3a52]"></iconify-icon>
-      </button>
-    </div>
+  </div>
+  <!-- Desktop Nav -->
+  <nav class="hidden md:flex gap-8 items-center">
+    <a class="font-label-bold text-label-bold text-primary flex flex-col items-center" href="boutique.html">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">storefront</span>
+      Boutique
+    </a>
+    <a class="font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity flex flex-col items-center" href="services.html">
+      <span class="material-symbols-outlined mb-1">solar_power</span>
+      Services
+    </a>
+    <a class="font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity flex flex-col items-center" href="devis.html">
+      <span class="material-symbols-outlined mb-1">request_quote</span>
+      Devis
+    </a>
+  </nav>
+  <div class="flex items-center gap-2">
+    <a href="apropos.html" class="hidden lg:block font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity px-2">À propos</a>
+    <a href="contact.html" class="hidden lg:block font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity px-2">Contact</a>
+    <a href="panier.html" id="cart-btn" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-150 relative" aria-label="Panier">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span id="cart-count" class="hidden absolute -top-1 -right-1 bg-secondary text-on-secondary rounded-full w-4 h-4 flex items-center justify-center font-label-bold text-[10px]">0</span>
+    </a>
   </div>
 </header>
-<div id="mobile-menu-panel" class="hidden lg:hidden fixed inset-x-0 top-20 z-40 bg-white border-b border-slate-200 shadow-lg">
-  <a href="index.html"    class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Accueil</a>
-  <a href="services.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Services</a>
-  <a href="boutique.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-[#1a3a52] font-bold hover:bg-slate-50">Boutique</a>
-  <a href="apropos.html"  class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">À propos</a>
-  <a href="contact.html"  class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Contact</a>
-  <div class="p-4 flex flex-col gap-3">
-    <a href="https://wa.me/50937257586" class="flex items-center justify-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50">
-      <iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span>
-    </a>
-  </div>
-</div>
-<script>(function(){var btn=document.getElementById("mobile-menu-btn");var panel=document.getElementById("mobile-menu-panel");if(!btn||!panel)return;function close(){panel.classList.add("hidden");btn.setAttribute("aria-expanded","false");btn.querySelector("iconify-icon").setAttribute("icon","lucide:menu");}function open(){panel.classList.remove("hidden");btn.setAttribute("aria-expanded","true");btn.querySelector("iconify-icon").setAttribute("icon","lucide:x");}btn.addEventListener("click",function(e){e.stopPropagation();panel.classList.contains("hidden")?open():close();});panel.querySelectorAll("a").forEach(function(a){a.addEventListener("click",close);});document.addEventListener("click",function(e){if(!panel.classList.contains("hidden")&&!panel.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){close();}});document.addEventListener("keydown",function(e){if(e.key==="Escape")close();});window.addEventListener("resize",function(){if(window.innerWidth>=1024)close();});})();</script>
-</div>
-<!-- ══════════════════ /NAV ══════════════════ -->
 
-<!-- ══════════════════ HERO ══════════════════ -->
-<section class="bg-jl-dark py-16 relative overflow-hidden">
-  <div class="absolute inset-0 opacity-5" style="background-image:radial-gradient(#FFD700 1px,transparent 1px);background-size:32px 32px;"></div>
-  <div class="max-w-7xl mx-auto px-6 relative z-10">
-    <nav class="text-sm text-slate-400 mb-6 flex items-center gap-2">
-      <a href="index.html" class="hover:text-jl-yellow transition-colors">Accueil</a>
-      <span>›</span>
-      <span class="text-white font-medium">Boutique</span>
+<!-- Mobile menu panel -->
+<div id="mobile-menu-panel" class="hidden md:hidden fixed inset-x-0 top-16 z-40 bg-surface border-b border-outline-variant/30 shadow-lg">
+  <a href="index.html" class="block py-3 px-6 font-body-md text-body-md border-b border-outline-variant/20 text-on-surface hover:bg-surface-container">Accueil</a>
+  <a href="boutique.html" class="block py-3 px-6 font-body-md text-body-md font-bold border-b border-outline-variant/20 text-primary hover:bg-surface-container">Boutique</a>
+  <a href="services.html" class="block py-3 px-6 font-body-md text-body-md border-b border-outline-variant/20 text-on-surface hover:bg-surface-container">Services</a>
+  <a href="devis.html" class="block py-3 px-6 font-body-md text-body-md border-b border-outline-variant/20 text-on-surface hover:bg-surface-container">Devis gratuit</a>
+  <a href="apropos.html" class="block py-3 px-6 font-body-md text-body-md border-b border-outline-variant/20 text-on-surface hover:bg-surface-container">À propos</a>
+  <a href="contact.html" class="block py-3 px-6 font-body-md text-body-md text-on-surface hover:bg-surface-container">Contact</a>
+</div>
+
+<div class="flex flex-1 w-full max-w-container-max mx-auto">
+  <!-- NavigationDrawer (Desktop Only) -->
+  <aside class="hidden lg:flex flex-col h-[calc(100vh-64px)] w-[280px] bg-surface border-r border-outline-variant/20 py-4 fixed top-16 left-0 shadow-xl overflow-y-auto">
+    <h2 class="font-headline-md text-headline-md text-primary px-4 mb-4">Catégories</h2>
+    <nav id="category-list" class="flex flex-col gap-1">
+      <!-- populated by JS -->
     </nav>
-    <h1 class="text-4xl md:text-5xl font-black text-white mb-3">Notre Boutique <span class="text-jl-yellow">Énergétique</span></h1>
-    <p class="text-slate-300 text-lg max-w-2xl">Panneaux solaires, batteries, inverseurs et accessoires certifiés — livrés à travers tout Haïti.</p>
-    <!-- Stats -->
-    <div class="flex flex-wrap gap-8 mt-8 pt-8 border-t border-white/10">
-      <div><p class="text-xl font-black text-jl-yellow">Livraison</p><p class="text-xs text-slate-400 uppercase tracking-widest">Partout en Haïti</p></div>
-      <div><p class="text-xl font-black text-jl-yellow">Garantie</p><p class="text-xs text-slate-400 uppercase tracking-widest">Sur tous les produits</p></div>
-      <div><p class="text-xl font-black text-jl-yellow">Support</p><p class="text-xs text-slate-400 uppercase tracking-widest">Installation incluse</p></div>
-    </div>
-  </div>
-</section>
+  </aside>
 
-<!-- ══════════════════ MAIN ══════════════════ -->
-<main class="max-w-7xl mx-auto px-6 py-12">
-
-  <!-- Category pills -->
-  <div class="flex items-center gap-3 overflow-x-auto pb-2 mb-8 scrollbar-hide">
-    <button class="cat-pill active shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 font-bold text-sm transition-all hover:border-jl-dark" data-cat="">Tous les produits</button>
-    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Panneaux Solaires">☀️ Panneaux Solaires</button>
-    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Batteries">🔋 Batteries</button>
-    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Inverseurs">⚡ Inverseurs</button>
-    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Câblage">🔌 Câblage</button>
-    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Accessoires">🔧 Accessoires</button>
-  </div>
-
-  <!-- Results count -->
-  <div class="flex items-center justify-between mb-6">
-    <p class="text-slate-500 text-sm"><span id="product-count">0</span> produit(s) disponible(s)</p>
-    <div class="flex items-center gap-2 text-sm text-slate-500">
-      <iconify-icon icon="lucide:info" class="text-base"></iconify-icon>
-      <span>Prix en HTG</span>
-    </div>
-  </div>
-
-  <!-- Product grid -->
-  <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <!-- Skeleton loaders -->
-    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
-    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden sm:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
-    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden lg:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
-    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden xl:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
-  </div>
-
-  <!-- Empty state (hidden by default) -->
-  <div id="empty-state" class="hidden text-center py-24">
-    <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-      <iconify-icon icon="lucide:package-open" class="text-slate-300 text-4xl"></iconify-icon>
-    </div>
-    <h3 class="text-xl font-bold text-jl-dark mb-2">Aucun produit dans cette catégorie</h3>
-    <p class="text-slate-400 mb-6">Revenez bientôt ou consultez toutes les catégories.</p>
-    <button class="cat-pill px-6 py-3 rounded-full bg-jl-dark text-white font-bold hover:bg-jl-yellow hover:text-jl-dark transition-all" data-cat="">Voir tous les produits</button>
-  </div>
-
-  <!-- CTA banner -->
-  <div class="mt-16 bg-jl-dark rounded-3xl overflow-hidden relative">
-    <div class="absolute inset-0 opacity-5" style="background-image:radial-gradient(#FFD700 1px,transparent 1px);background-size:32px 32px;"></div>
-    <div class="relative z-10 p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8">
-      <div>
-        <p class="text-jl-yellow font-bold text-sm uppercase tracking-widest mb-2">Besoin d'un conseil ?</p>
-        <h3 class="text-2xl sm:text-3xl font-black text-white mb-2">Demandez un devis personnalisé</h3>
-        <p class="text-slate-400">Nos experts calculent la solution idéale pour votre consommation.</p>
+  <!-- Main Content Canvas -->
+  <main class="flex-1 w-full lg:ml-[280px] p-margin-mobile md:p-margin-desktop">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-4">
+      <h2 id="page-heading" class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Tous les produits</h2>
+      <div class="w-full md:w-auto flex gap-2">
+        <div class="relative w-full md:w-64">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+          <input id="search-input" class="w-full h-12 pl-10 pr-4 rounded-lg border border-outline-variant focus:border-secondary focus:border-2 bg-surface-container-lowest text-body-sm font-body-sm outline-none transition-colors" placeholder="Rechercher..." type="text">
+        </div>
+        <button id="filter-btn" class="h-12 w-12 flex items-center justify-center rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low transition-colors shrink-0 lg:hidden">
+          <span class="material-symbols-outlined text-on-surface-variant">tune</span>
+        </button>
       </div>
-      <a href="/devis.html" class="shrink-0 px-8 py-4 bg-jl-yellow text-jl-dark font-black rounded-full hover:bg-yellow-400 transition-all hover:scale-105 whitespace-nowrap text-lg">Devis gratuit →</a>
     </div>
-  </div>
-</main>
+
+    <!-- Mobile category chips -->
+    <div id="category-chips" class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 lg:hidden"></div>
+
+    <p class="font-body-sm text-body-sm text-on-surface-variant mb-4"><span id="product-count">0</span> produit(s) disponible(s)</p>
+
+    <!-- Bento Grid Products -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div class="animate-pulse bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden"><div class="aspect-[4/3] bg-surface-container"></div><div class="p-4 space-y-3"><div class="h-4 bg-surface-container rounded w-2/3"></div><div class="h-3 bg-surface-container rounded w-1/2"></div><div class="h-9 bg-surface-container rounded-lg"></div></div></div>
+      <div class="animate-pulse bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hidden sm:block"><div class="aspect-[4/3] bg-surface-container"></div><div class="p-4 space-y-3"><div class="h-4 bg-surface-container rounded w-2/3"></div><div class="h-3 bg-surface-container rounded w-1/2"></div><div class="h-9 bg-surface-container rounded-lg"></div></div></div>
+      <div class="animate-pulse bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden hidden xl:block"><div class="aspect-[4/3] bg-surface-container"></div><div class="p-4 space-y-3"><div class="h-4 bg-surface-container rounded w-2/3"></div><div class="h-3 bg-surface-container rounded w-1/2"></div><div class="h-9 bg-surface-container rounded-lg"></div></div></div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden text-center py-24">
+      <span class="material-symbols-outlined text-outline-variant" style="font-size:64px;">inventory_2</span>
+      <h3 class="font-headline-md text-headline-md text-on-surface mt-4 mb-2">Aucun produit dans cette catégorie</h3>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Revenez bientôt ou consultez toutes les catégories.</p>
+      <button id="reset-filter" class="px-6 py-3 rounded-full bg-primary text-on-primary font-label-bold text-label-bold">Voir tous les produits</button>
+    </div>
+
+    <!-- CTA banner -->
+    <div class="mt-16 bg-primary rounded-xl overflow-hidden">
+      <div class="p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8">
+        <div>
+          <p class="text-jl-yellow font-label-bold text-label-bold uppercase tracking-widest mb-2">Besoin d'un conseil ?</p>
+          <h3 class="font-headline-md text-headline-md text-white mb-2">Demandez un devis personnalisé</h3>
+          <p class="font-body-sm text-body-sm text-on-primary-container">Nos experts calculent la solution idéale pour votre consommation.</p>
+        </div>
+        <a href="devis.html" class="shrink-0 px-8 py-4 bg-white text-primary font-label-bold text-label-bold rounded-full hover:bg-jl-yellow transition-all whitespace-nowrap">Devis gratuit →</a>
+      </div>
+    </div>
+  </main>
+</div>
 
 <!-- ══════════════════ FOOTER ══════════════════ -->
-<footer class="bg-[#1a3a52] text-white pt-16 pb-10 mt-16 border-t border-white/10">
+<footer class="bg-[#1a3a52] text-white pt-16 pb-10 mt-8 border-t border-white/10">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
       <div class="space-y-4">
-        <div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#FFD700] rounded flex items-center justify-center"><iconify-icon icon="lucide:zap" class="text-[#1a3a52]"></iconify-icon></div><span class="text-xl font-bold">JL & Co</span></div>
+        <div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#FFD700] rounded flex items-center justify-center"><span class="material-symbols-outlined text-[#1a3a52]" style="font-size:18px;">bolt</span></div><span class="text-xl font-bold">JL & Co</span></div>
         <p class="text-slate-400 text-sm">Solutions énergétiques professionnelles pour particuliers et entreprises.</p>
       </div>
       <div><h4 class="font-bold text-lg mb-4">Services</h4><ul class="space-y-3 text-slate-400 text-sm"><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Installations Solaires</a></li><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Électricité</a></li><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Mécanique</a></li></ul></div>
       <div><h4 class="font-bold text-lg mb-4">Liens utiles</h4><ul class="space-y-3 text-slate-400 text-sm"><li><a href="apropos.html" class="hover:text-[#FFD700] transition-colors">À propos</a></li><li><a href="devis.html" class="hover:text-[#FFD700] transition-colors">Devis gratuit</a></li><li><a href="contact.html" class="hover:text-[#FFD700] transition-colors">Contact</a></li></ul></div>
-      <div><h4 class="font-bold text-lg mb-4">Contact</h4><ul class="space-y-3 text-slate-400 text-sm"><li class="flex items-center gap-2"><iconify-icon icon="lucide:phone" class="text-[#FFD700]"></iconify-icon>+509 3659 2772</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:mail" class="text-[#FFD700]"></iconify-icon>Venelsonliberus11@gmail.com</li></ul></div>
+      <div><h4 class="font-bold text-lg mb-4">Contact</h4><ul class="space-y-3 text-slate-400 text-sm"><li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#FFD700]" style="font-size:18px;">call</span>+509 3659 2772</li><li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#FFD700]" style="font-size:18px;">mail</span>Venelsonliberus11@gmail.com</li></ul></div>
     </div>
     <div class="border-t border-white/10 pt-8 text-center text-slate-500 text-sm">&copy; 2026 JL & Co. Tous droits réservés.</div>
   </div>
 </footer>
 
-<!-- ══════════════════ CART DRAWER ══════════════════ -->
-<!-- Overlay -->
-<div id="cart-overlay" class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none" aria-hidden="true"></div>
-
-<!-- Drawer -->
-<aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-[70] shadow-2xl flex flex-col transform translate-x-full" aria-label="Panier d'achat">
-  <!-- Drawer header -->
-  <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-    <div class="flex items-center gap-3">
-      <iconify-icon icon="lucide:shopping-cart" class="text-jl-dark text-2xl"></iconify-icon>
-      <h2 class="text-xl font-black text-jl-dark">Mon Panier</h2>
-    </div>
-    <button id="cart-close" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors" aria-label="Fermer">
-      <iconify-icon icon="lucide:x" class="text-slate-600 text-lg"></iconify-icon>
-    </button>
-  </div>
-
-  <!-- Cart items -->
-  <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-    <!-- populated by JS -->
-  </div>
-
-  <!-- Cart empty state -->
-  <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center text-center px-6 hidden">
-    <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-      <iconify-icon icon="lucide:shopping-cart" class="text-slate-300 text-3xl"></iconify-icon>
-    </div>
-    <h3 class="font-bold text-jl-dark text-lg mb-1">Votre panier est vide</h3>
-    <p class="text-slate-400 text-sm">Ajoutez des produits pour commencer.</p>
-  </div>
-
-  <!-- Cart footer -->
-  <div id="cart-footer" class="hidden border-t border-slate-100 px-6 py-5 bg-slate-50 space-y-4">
-    <div class="flex items-center justify-between">
-      <span class="font-bold text-slate-600">Sous-total</span>
-      <span id="cart-subtotal" class="text-xl font-black text-jl-dark">0 HTG</span>
-    </div>
-    <p class="text-xs text-slate-400">Livraison et taxes calculées à la validation.</p>
-    <a href="/panier.html" class="w-full flex items-center justify-center gap-2 py-4 bg-jl-dark text-jl-yellow font-black rounded-2xl hover:bg-jl-yellow hover:text-jl-dark transition-all text-lg">
-      <iconify-icon icon="lucide:lock"></iconify-icon>
-      Finaliser la commande
-    </a>
-    <button id="cart-clear" class="w-full py-2 text-sm text-slate-400 hover:text-red-500 transition-colors">Vider le panier</button>
-  </div>
-</aside>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-lowest shadow-[0_-4px_12px_rgba(0,0,0,0.08)] left-0 flex justify-around items-center py-2 px-margin-mobile pb-safe">
+  <a href="boutique.html" class="bottom-nav-item active flex flex-col items-center justify-center rounded-full px-4 py-1 active:scale-90 duration-200">
+    <span class="material-symbols-outlined mb-1 text-[24px]" style="font-variation-settings: 'FILL' 1;">storefront</span>
+    <span class="font-label-bold text-label-bold">Boutique</span>
+  </a>
+  <a href="services.html" class="bottom-nav-item flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:bg-surface-container-high transition-colors active:scale-90 duration-200 rounded-full px-4 py-1">
+    <span class="material-symbols-outlined mb-1 text-[24px]">solar_power</span>
+    <span class="font-label-bold text-label-bold">Services</span>
+  </a>
+  <a href="devis.html" class="bottom-nav-item flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:bg-surface-container-high transition-colors active:scale-90 duration-200 rounded-full px-4 py-1">
+    <span class="material-symbols-outlined mb-1 text-[24px]">request_quote</span>
+    <span class="font-label-bold text-label-bold">Devis</span>
+  </a>
+  <a href="/dashboard.html" class="bottom-nav-item flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:bg-surface-container-high transition-colors active:scale-90 duration-200 rounded-full px-4 py-1">
+    <span class="material-symbols-outlined mb-1 text-[24px]">person</span>
+    <span class="font-label-bold text-label-bold">Profil</span>
+  </a>
+</nav>
 
 <!-- Add-to-cart toast -->
-<div id="toast-cart" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] flex items-center gap-3 bg-jl-dark text-white px-6 py-3 rounded-full shadow-xl opacity-0 pointer-events-none" aria-live="polite">
-  <iconify-icon icon="lucide:check-circle" class="text-jl-yellow text-xl shrink-0"></iconify-icon>
-  <span id="toast-cart-text" class="font-medium text-sm">Produit ajouté au panier</span>
+<div id="toast-cart" class="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-[80] flex items-center gap-3 bg-primary text-white px-6 py-3 rounded-full shadow-xl opacity-0 pointer-events-none" aria-live="polite">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+  <span id="toast-cart-text" class="font-body-sm text-body-sm">Produit ajouté au panier</span>
 </div>
 
-<!-- ══════════════════ SCRIPTS ══════════════════ -->
 <script>
 (function () {
   'use strict';
 
-  // ── Cart state (localStorage) ──────────────────────────────────────────
-  var CART_KEY = 'jlco_cart_v1';
+  var CATEGORY_ICONS = {
+    "": "apps",
+    "Panneaux Solaires": "wb_sunny",
+    "Batteries": "battery_charging_full",
+    "Inverseurs": "electric_bolt",
+    "Câblage": "cable",
+    "Accessoires": "build"
+  };
+  var CATEGORY_LABELS = { "": "Tous les produits" };
 
-  function loadCart() {
-    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e) { return []; }
-  }
-  function saveCart(cart) {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  }
+  var CART_KEY = 'jlco_cart_v1';
+  var FAV_KEY = 'jlco_favs_v1';
+
+  function loadCart() { try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; } }
+  function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+  function loadFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; } catch (e) { return []; } }
+  function saveFavs(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
 
   var cart = loadCart();
-
-  // ── Products state ─────────────────────────────────────────────────────
+  var favs = loadFavs();
   var allProducts = [];
   var activeCategory = '';
+  var searchTerm = '';
 
-  // ── DOM refs ──────────────────────────────────────────────────────────
-  var grid        = document.getElementById('product-grid');
-  var emptyState  = document.getElementById('empty-state');
-  var countEl     = document.getElementById('product-count');
-  var cartBtn     = document.getElementById('cart-btn');
-  var cartClose   = document.getElementById('cart-close');
-  var cartOverlay = document.getElementById('cart-overlay');
-  var cartDrawer  = document.getElementById('cart-drawer');
-  var cartItems   = document.getElementById('cart-items');
-  var cartEmptyEl = document.getElementById('cart-empty');
-  var cartFooter  = document.getElementById('cart-footer');
-  var cartCount   = document.getElementById('cart-count');
-  var cartSubtotal= document.getElementById('cart-subtotal');
-  var cartClear   = document.getElementById('cart-clear');
-  var toast       = document.getElementById('toast-cart');
-  var toastText   = document.getElementById('toast-cart-text');
+  var grid = document.getElementById('product-grid');
+  var emptyState = document.getElementById('empty-state');
+  var countEl = document.getElementById('product-count');
+  var heading = document.getElementById('page-heading');
+  var categoryList = document.getElementById('category-list');
+  var categoryChips = document.getElementById('category-chips');
+  var searchInput = document.getElementById('search-input');
+  var cartCount = document.getElementById('cart-count');
+  var toast = document.getElementById('toast-cart');
+  var toastText = document.getElementById('toast-cart-text');
 
-  // ── Cart drawer open/close ─────────────────────────────────────────────
-  function openCart()  {
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    renderCart();
+  // ── Mobile menu ──────────────────────────────────────────────
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menuPanel.classList.toggle('hidden');
+    });
+    document.addEventListener('click', function (e) {
+      if (!menuPanel.classList.contains('hidden') && !menuPanel.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+      }
+    });
   }
-  function closeCart() {
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  cartBtn.addEventListener('click', openCart);
-  cartClose.addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
-  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeCart(); });
 
-  // ── Cart badge ────────────────────────────────────────────────────────
+  function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function fmtPrice(n) { return Number(n || 0).toLocaleString('fr-FR') + ' HTG'; }
+
   function updateBadge() {
-    var total = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+    var total = cart.reduce(function (s, i) { return s + i.qty; }, 0);
     if (total > 0) {
       cartCount.textContent = total > 99 ? '99+' : total;
       cartCount.classList.remove('hidden');
-      cartCount.classList.add('flex');
     } else {
       cartCount.classList.add('hidden');
-      cartCount.classList.remove('flex');
     }
   }
 
-  // ── Render cart items ─────────────────────────────────────────────────
-  function renderCart() {
-    cart = loadCart();
-    updateBadge();
-    if (cart.length === 0) {
-      cartItems.innerHTML = '';
-      cartEmptyEl.classList.remove('hidden');
-      cartFooter.classList.add('hidden');
-      return;
-    }
-    cartEmptyEl.classList.add('hidden');
-    cartFooter.classList.remove('hidden');
-
-    var total = 0;
-    cartItems.innerHTML = cart.map(function(item) {
-      total += item.prix * item.qty;
-      var img = item.image
-        ? '<img src="' + esc(item.image) + '" class="w-full h-full object-cover">'
-        : '<div class="w-full h-full flex items-center justify-center text-slate-300"><iconify-icon icon="lucide:package" class="text-2xl"></iconify-icon></div>';
-      return '<div class="flex gap-4 items-start py-4 border-b border-slate-100 last:border-0" data-id="' + esc(item.id) + '">' +
-        '<div class="w-20 h-20 rounded-2xl bg-slate-100 overflow-hidden shrink-0">' + img + '</div>' +
-        '<div class="flex-1 min-w-0">' +
-          '<p class="font-bold text-jl-dark text-sm leading-tight mb-1">' + esc(item.nom) + '</p>' +
-          '<p class="text-xs text-slate-400 mb-3">' + esc(item.categorie || 'Produit') + '</p>' +
-          '<div class="flex items-center gap-3">' +
-            '<div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">' +
-              '<button class="qty-minus w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors text-lg font-bold" data-id="' + esc(item.id) + '">−</button>' +
-              '<span class="w-8 text-center text-sm font-bold text-jl-dark">' + item.qty + '</span>' +
-              '<button class="qty-plus w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors text-lg font-bold" data-id="' + esc(item.id) + '">+</button>' +
-            '</div>' +
-            '<p class="font-black text-jl-dark text-base">' + fmtPrice(item.prix * item.qty) + '</p>' +
-          '</div>' +
-        '</div>' +
-        '<button class="item-remove shrink-0 w-7 h-7 rounded-full bg-slate-100 hover:bg-red-100 hover:text-red-500 flex items-center justify-center text-slate-400 transition-colors" data-id="' + esc(item.id) + '" aria-label="Supprimer">' +
-          '<iconify-icon icon="lucide:x" class="text-sm"></iconify-icon>' +
-        '</button>' +
-      '</div>';
-    }).join('');
-
-    cartSubtotal.textContent = fmtPrice(total);
-
-    // Qty & remove events
-    cartItems.querySelectorAll('.qty-plus').forEach(function(b) {
-      b.addEventListener('click', function() { changeQty(b.dataset.id, 1); });
-    });
-    cartItems.querySelectorAll('.qty-minus').forEach(function(b) {
-      b.addEventListener('click', function() { changeQty(b.dataset.id, -1); });
-    });
-    cartItems.querySelectorAll('.item-remove').forEach(function(b) {
-      b.addEventListener('click', function() { removeItem(b.dataset.id); });
-    });
-  }
-
-  function changeQty(id, delta) {
-    cart = loadCart();
-    var item = cart.find(function(i) { return i.id === id; });
-    if (!item) return;
-    item.qty = Math.max(1, item.qty + delta);
-    saveCart(cart);
-    renderCart();
-  }
-  function removeItem(id) {
-    cart = loadCart();
-    cart = cart.filter(function(i) { return i.id !== id; });
-    saveCart(cart);
-    renderCart();
-  }
-  if (cartClear) {
-    cartClear.addEventListener('click', function() {
-      if (!confirm('Vider le panier ?')) return;
-      saveCart([]);
-      cart = [];
-      renderCart();
-    });
-  }
-
-  // ── Add to cart ───────────────────────────────────────────────────────
   function addToCart(product) {
     cart = loadCart();
-    var existing = cart.find(function(i) { return i.id === product.id; });
+    var existing = cart.find(function (i) { return i.id === product.id; });
     if (existing) { existing.qty++; }
     else { cart.push({ id: product.id, nom: product.nom, prix: Number(product.prix) || 0, image: product.image || '', categorie: product.categorie || '', qty: 1 }); }
     saveCart(cart);
@@ -392,22 +309,73 @@
     toast.style.opacity = '1';
     toast.style.transform = 'translateX(-50%) translateY(0)';
     clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(function() {
+    window._toastTimer = setTimeout(function () {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(-50%) translateY(12px)';
     }, 2500);
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────
-  function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function fmtPrice(n) { return Number(n || 0).toLocaleString('fr-FR') + ' HTG'; }
-  function stockBadge(stock) {
-    if (!stock || stock === 'En stock') return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">EN STOCK</span>';
-    if (stock === 'Stock limité') return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">STOCK LIMITÉ</span>';
-    return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-600">RUPTURE</span>';
+  function toggleFav(id) {
+    favs = loadFavs();
+    var idx = favs.indexOf(id);
+    if (idx >= 0) { favs.splice(idx, 1); } else { favs.push(id); }
+    saveFavs(favs);
+    renderProducts(getFiltered());
   }
 
-  // ── Render products ──────────────────────────────────────────────────
+  function renderCategoryNav() {
+    var cats = [''].concat(Array.from(new Set(allProducts.map(function (p) { return p.categorie; }))).sort());
+    categoryList.innerHTML = cats.map(function (cat) {
+      var label = CATEGORY_LABELS[cat] || cat;
+      var icon = CATEGORY_ICONS[cat] || 'category';
+      var isActive = cat === activeCategory;
+      return '<a href="#" data-cat="' + esc(cat) + '" class="cat-link ' + (isActive ? 'active' : '') + ' text-on-surface-variant px-4 py-3 flex items-center gap-3 tap-highlight-transparent hover:bg-surface-container-highest transition-all rounded-r-full">' +
+        '<span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' ' + (isActive ? 1 : 0) + ';">' + icon + '</span>' +
+        '<span class="font-body-md text-body-md">' + esc(label) + '</span>' +
+        '</a>';
+    }).join('');
+
+    categoryChips.innerHTML = cats.map(function (cat) {
+      var label = CATEGORY_LABELS[cat] || cat;
+      var isActive = cat === activeCategory;
+      return '<button data-cat="' + esc(cat) + '" class="cat-chip shrink-0 px-4 py-2 rounded-full border font-label-bold text-label-bold transition-all ' +
+        (isActive ? 'bg-primary text-on-primary border-primary' : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant') + '">' + esc(label) + '</button>';
+    }).join('');
+
+    Array.prototype.slice.call(document.querySelectorAll('.cat-link')).forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); filterByCategory(a.dataset.cat); });
+    });
+    Array.prototype.slice.call(document.querySelectorAll('.cat-chip')).forEach(function (b) {
+      b.addEventListener('click', function () { filterByCategory(b.dataset.cat); });
+    });
+  }
+
+  function filterByCategory(cat) {
+    activeCategory = cat;
+    heading.textContent = CATEGORY_LABELS[cat] || cat;
+    renderCategoryNav();
+    renderProducts(getFiltered());
+  }
+
+  function getFiltered() {
+    return allProducts.filter(function (p) {
+      var matchCat = activeCategory ? p.categorie === activeCategory : true;
+      var matchSearch = searchTerm ? p.nom.toLowerCase().indexOf(searchTerm) !== -1 : true;
+      return matchCat && matchSearch;
+    });
+  }
+
+  searchInput.addEventListener('input', function () {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    renderProducts(getFiltered());
+  });
+
+  document.getElementById('reset-filter').addEventListener('click', function () {
+    searchInput.value = '';
+    searchTerm = '';
+    filterByCategory('');
+  });
+
   function renderProducts(products) {
     countEl.textContent = products.length;
     if (products.length === 0) {
@@ -417,84 +385,63 @@
     }
     emptyState.classList.add('hidden');
 
-    grid.innerHTML = products.map(function(p) {
-      var imgHtml = p.image
-        ? '<img src="' + esc(p.image) + '" alt="' + esc(p.nom) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">'
-        : '<div class="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-2"><iconify-icon icon="lucide:package" class="text-5xl"></iconify-icon><p class="text-xs">Photo à venir</p></div>';
+    grid.innerHTML = products.map(function (p) {
+      var isFav = favs.indexOf(p.id) !== -1;
       var outOfStock = p.stock === 'Rupture de stock';
+      var imgHtml = p.image
+        ? '<img class="w-full h-full object-cover p-4" src="' + esc(p.image) + '" alt="' + esc(p.nom) + '" loading="lazy">'
+        : '<div class="w-full h-full flex items-center justify-center text-outline-variant"><span class="material-symbols-outlined" style="font-size:48px;">inventory_2</span></div>';
 
-      return '<div class="product-card bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col">' +
-        '<div class="relative aspect-square bg-slate-50 overflow-hidden group">' +
+      return '<article class="product-card bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden flex flex-col">' +
+        '<div class="relative w-full aspect-[4/3] bg-surface-container-lowest">' +
           imgHtml +
-          '<div class="absolute top-3 left-3">' + stockBadge(p.stock) + '</div>' +
-          '<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">' +
-            '<div class="w-9 h-9 bg-white rounded-full shadow flex items-center justify-center"><iconify-icon icon="lucide:zoom-in" class="text-jl-dark text-base"></iconify-icon></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="p-5 flex flex-col flex-1">' +
-          '<p class="text-xs font-bold text-jl-yellow uppercase tracking-widest mb-1">' + esc(p.categorie || 'Produit') + '</p>' +
-          '<h3 class="font-bold text-jl-dark text-base leading-tight mb-3 flex-1">' + esc(p.nom) + '</h3>' +
-          '<div class="flex items-end justify-between mb-4">' +
-            '<div>' +
-              '<p class="text-xs text-slate-400">Prix</p>' +
-              '<p class="text-2xl font-black text-jl-dark">' + fmtPrice(p.prix) + '</p>' +
-            '</div>' +
-          '</div>' +
-          '<button class="add-to-cart-btn w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all ' +
-            (outOfStock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-jl-dark text-white hover:bg-jl-yellow hover:text-jl-dark') + '" ' +
-            'data-id="' + esc(p.id || p.nom) + '" ' +
-            (outOfStock ? 'disabled' : '') + '>' +
-            '<iconify-icon icon="lucide:shopping-cart" class="text-base"></iconify-icon>' +
-            (outOfStock ? 'Rupture de stock' : 'Ajouter au panier') +
+          '<div class="absolute top-4 right-4 bg-surface/90 backdrop-blur-sm px-2 py-1 rounded font-label-bold text-label-bold text-primary">' + esc(p.categorie) + '</div>' +
+          '<button class="fav-btn ' + (isFav ? 'active' : '') + ' absolute top-4 left-4 text-outline hover:text-error transition-colors" data-id="' + esc(p.id) + '" aria-label="Favori">' +
+            '<span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' ' + (isFav ? 1 : 0) + ';">favorite</span>' +
           '</button>' +
         '</div>' +
-      '</div>';
+        '<div class="p-4 flex flex-col flex-1 border-t border-outline-variant/20">' +
+          '<div class="flex justify-between items-start mb-2">' +
+            '<h3 class="font-headline-md text-headline-md text-on-surface line-clamp-2">' + esc(p.nom) + '</h3>' +
+          '</div>' +
+          '<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 flex-1">' + esc(p.description || '') + '</p>' +
+          '<div class="flex items-center justify-between mt-auto">' +
+            '<span class="font-headline-md text-headline-md text-primary">' + fmtPrice(p.prix) + '</span>' +
+            '<button class="add-to-cart-btn bg-primary hover:bg-primary-container hover:text-on-primary-container text-on-primary rounded-lg h-10 px-4 font-label-bold text-label-bold transition-colors flex items-center gap-2 ' + (outOfStock ? 'opacity-50 cursor-not-allowed' : '') + '" data-id="' + esc(p.id) + '" ' + (outOfStock ? 'disabled' : '') + '>' +
+              '<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>' +
+              (outOfStock ? 'Rupture' : 'Ajouter') +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
     }).join('');
 
-    // Attach add-to-cart handlers
-    grid.querySelectorAll('.add-to-cart-btn:not([disabled])').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var id = btn.dataset.id;
-        var p = allProducts.find(function(pr) { return (pr.id || pr.nom) === id; });
+    Array.prototype.slice.call(grid.querySelectorAll('.add-to-cart-btn:not([disabled])')).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var p = allProducts.find(function (pr) { return pr.id === btn.dataset.id; });
         if (p) addToCart(p);
       });
     });
-  }
-
-  // ── Category filtering ────────────────────────────────────────────────
-  function filterProducts(cat) {
-    activeCategory = cat;
-    document.querySelectorAll('.cat-pill').forEach(function(pill) {
-      if (pill.dataset.cat === cat) { pill.classList.add('active'); }
-      else { pill.classList.remove('active'); }
+    Array.prototype.slice.call(grid.querySelectorAll('.fav-btn')).forEach(function (btn) {
+      btn.addEventListener('click', function () { toggleFav(btn.dataset.id); });
     });
-    var filtered = cat ? allProducts.filter(function(p) { return p.categorie === cat; }) : allProducts;
-    renderProducts(filtered);
   }
 
-  document.querySelectorAll('.cat-pill').forEach(function(pill) {
-    pill.addEventListener('click', function() { filterProducts(pill.dataset.cat); });
-  });
-
-  // ── Load products from API ────────────────────────────────────────────
   fetch('/api/produits')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
       allProducts = data;
-      filterProducts(activeCategory);
+      renderCategoryNav();
+      renderProducts(getFiltered());
     })
-    .catch(function() {
-      // Show friendly error
-      grid.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">' +
-        '<iconify-icon icon="lucide:wifi-off" class="text-5xl mb-4 block"></iconify-icon>' +
-        '<p class="font-medium">Impossible de charger les produits.</p>' +
-        '<p class="text-sm mt-1">Vérifiez votre connexion et rechargez la page.</p>' +
+    .catch(function () {
+      grid.innerHTML = '<div class="col-span-full text-center py-20 text-on-surface-variant">' +
+        '<span class="material-symbols-outlined" style="font-size:48px;">wifi_off</span>' +
+        '<p class="font-body-md text-body-md mt-4">Impossible de charger les produits.</p>' +
         '</div>';
     });
 
-  // ── Init badge ───────────────────────────────────────────────────────
   updateBadge();
-
 })();
 </script>
 <script src="/auth.js"></script>
