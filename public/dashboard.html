@@ -1,27 +1,837 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard Admin | JL & Co</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script><script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script><link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet"><style>body{font-family:'Satoshi',sans-serif}h1,h2,h3,h4{font-family:'Clash Grotesk',sans-serif}.bg-jl-dark{background-color:#1a3a52}.text-jl-yellow{color:#FFD700}.bg-jl-yellow{background-color:#FFD700}.border-jl-yellow{border-color:#FFD700}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#1a3a52}::-webkit-scrollbar-thumb{background:#FFD700;border-radius:10px}</style></head><body><div class="min-h-screen bg-slate-50 flex overflow-hidden"><aside class="w-64 bg-jl-dark text-white flex-shrink-0 flex flex-col z-50"><div class="h-20 flex items-center px-6 border-b border-white/10"><div class="flex items-center gap-2 group"><div class="w-8 h-8 bg-white/10 rounded flex items-center justify-center group-hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:zap" class="text-jl-yellow group-hover:text-jl-dark"></iconify-icon></div><span class="text-xl font-bold tracking-tight">JL <span class="text-jl-yellow">&</span> Co</span></div></div><nav class="flex-1 py-6 px-4 space-y-1 overflow-y-auto"><a href="#" id="side-dash" class="flex items-center gap-3 px-4 py-3 bg-jl-yellow text-jl-dark font-bold rounded-xl shadow-lg"><iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon> Dashboard</a><a href="#" id="side-products" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:package" class="text-xl"></iconify-icon> Produits</a><a href="#" id="side-inventory" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:boxes" class="text-xl"></iconify-icon> Inventaire</a><a href="#" id="side-orders" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:shopping-cart" class="text-xl"></iconify-icon> Commandes</a><a href="#" id="side-clients" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:users" class="text-xl"></iconify-icon> Clients</a><a href="#" id="side-quotes" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:file-text" class="text-xl"></iconify-icon> Devis <span class="ml-auto bg-jl-yellow text-jl-dark text-[10px] px-2 py-0.5 rounded-full">4</span></a><a href="#" id="side-analytics" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon> Analyses</a><div class="pt-8 mt-8 border-t border-white/10"><a href="#" id="side-settings" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 hover:text-white rounded-xl transition-all"><iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon> Paramètres</a></div></nav><div class="p-4 border-t border-white/10"><div class="bg-white/5 rounded-2xl p-4 flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-jl-yellow flex items-center justify-center font-bold text-jl-dark">JD</div><div class="flex-1 truncate"><p class="text-sm font-bold">Jean Admin</p><p class="text-xs text-slate-400 truncate">admin@jlco-energy.com</p></div><button class="text-slate-400 hover:text-white"><iconify-icon icon="lucide:log-out"></iconify-icon></button></div></div></aside><main class="flex-1 flex flex-col overflow-hidden"><header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0 z-40"><h1 class="text-2xl font-bold text-jl-dark">Vue d'ensemble</h1><div class="flex items-center gap-6"><div class="relative"><iconify-icon icon="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon><input type="text" placeholder="Rechercher..." class="bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-jl-yellow w-64"></div><button class="relative p-2 text-slate-500 hover:text-jl-dark transition-colors"><iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon><span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button><div class="h-8 w-px bg-slate-200"></div><div class="flex items-center gap-3"><span class="text-sm font-medium text-slate-600">Dashboard Admin</span><div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><iconify-icon icon="lucide:chevron-down" class="text-slate-400"></iconify-icon></div></div></div></header><div class="flex-1 overflow-y-auto p-8 space-y-8"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"><div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"><div class="flex items-center justify-between mb-4"><div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-2xl"><iconify-icon icon="lucide:dollar-sign"></iconify-icon></div><span class="text-green-600 text-sm font-bold flex items-center gap-1"><iconify-icon icon="lucide:trending-up"></iconify-icon> +12%</span></div><h3 class="text-slate-500 text-sm font-medium">Revenu Total</h3><p class="text-2xl font-black text-jl-dark">42,580.00 €</p></div><div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"><div class="flex items-center justify-between mb-4"><div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl"><iconify-icon icon="lucide:shopping-bag"></iconify-icon></div><span class="text-green-600 text-sm font-bold flex items-center gap-1"><iconify-icon icon="lucide:trending-up"></iconify-icon> +5%</span></div><h3 class="text-slate-500 text-sm font-medium">Commandes Actives</h3><p class="text-2xl font-black text-jl-dark">28</p></div><div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"><div class="flex items-center justify-between mb-4"><div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-2xl"><iconify-icon icon="lucide:users"></iconify-icon></div><span class="text-slate-400 text-sm font-bold flex items-center gap-1">0%</span></div><h3 class="text-slate-500 text-sm font-medium">Total Clients</h3><p class="text-2xl font-black text-jl-dark">1,245</p></div><div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm"><div class="flex items-center justify-between mb-4"><div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-2xl"><iconify-icon icon="lucide:package"></iconify-icon></div><span class="text-red-500 text-sm font-bold flex items-center gap-1"><iconify-icon icon="lucide:trending-down"></iconify-icon> -3%</span></div><h3 class="text-slate-500 text-sm font-medium">Articles en Stock</h3><p class="text-2xl font-black text-jl-dark">852</p></div></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-8 shadow-sm"><div class="flex items-center justify-between mb-8"><h3 class="text-xl font-bold text-jl-dark">Tendances des Revenus</h3><select class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-jl-yellow"><option>Les 6 derniers mois</option><option>Cette année</option></select></div><div class="h-64 flex items-end justify-between gap-4 px-2"><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 35%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 35% "></div></div><span class="text-xs font-bold text-slate-400">Jan</span></div><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 48%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 48% "></div></div><span class="text-xs font-bold text-slate-400">Feb</span></div><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 62%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 62% "></div></div><span class="text-xs font-bold text-slate-400">Mar</span></div><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 55%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 55% "></div></div><span class="text-xs font-bold text-slate-400">Apr</span></div><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 75%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 75% "></div></div><span class="text-xs font-bold text-slate-400">May</span></div><div class="flex-1 flex flex-col items-center gap-3"><div class="w-full bg-jl-dark/5 rounded-t-xl relative overflow-hidden group" style="height: 90%"><div class="absolute bottom-0 w-full bg-jl-yellow rounded-t-xl transition-all duration-1000" style="height: 90% "></div></div><span class="text-xs font-bold text-slate-400">Jun</span></div></div></div><div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm"><h3 class="text-xl font-bold text-jl-dark mb-8">Ventes par Catégorie</h3><div class="relative flex items-center justify-center"><div class="w-48 h-48 rounded-full border-[16px] border-jl-dark flex items-center justify-center relative"><div class="absolute inset-0 border-[16px] border-jl-yellow rounded-full" style="clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%)"></div><div class="text-center"><p class="text-2xl font-black text-jl-dark">74%</p><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Solaire</p></div></div></div><div class="mt-8 space-y-3"><div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-jl-yellow"></span><span class="text-slate-600">Panneaux Solaires</span></div><span class="font-bold text-jl-dark">74%</span></div><div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-jl-dark"></span><span class="text-slate-600">Batteries</span></div><span class="font-bold text-jl-dark">18%</span></div><div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-200"></span><span class="text-slate-600">Autres</span></div><span class="font-bold text-jl-dark">8%</span></div></div></div></div><div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden"><div class="p-8 border-b border-slate-100 flex items-center justify-between"><h3 class="text-xl font-bold text-jl-dark">Dernières Commandes</h3><button class="text-jl-dark font-bold text-sm hover:text-jl-yellow transition-colors">Voir tout</button></div><div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-100"><tr class="px-8 py-4"><th class="px-8 py-4">ID COMMANDE</th><th class="px-8 py-4">CLIENT</th><th class="px-8 py-4">PRODUIT</th><th class="px-8 py-4">MONTANT</th><th class="px-8 py-4">STATUT</th><th class="px-8 py-4">ACTIONS</th></tr></thead><tbody class="divide-y divide-slate-50"><tr class="hover:bg-slate-50 transition-colors"><td class="px-8 py-5 font-bold text-slate-700">#JL-9082</td><td class="px-8 py-5 text-slate-600">Marc Dubois</td><td class="px-8 py-5 text-slate-600">Panneau Solaire 400W</td><td class="px-8 py-5 font-bold text-jl-dark">1,400.00 €</td><td class="px-8 py-5"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">Complété</span></td><td class="px-8 py-5"><div class="flex gap-2"><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><iconify-icon icon="lucide:edit-3"></iconify-icon></button></div></td></tr><tr class="hover:bg-slate-50 transition-colors"><td class="px-8 py-5 font-bold text-slate-700">#JL-9081</td><td class="px-8 py-5 text-slate-600">Sophie Laurent</td><td class="px-8 py-5 text-slate-600">Batterie Lithium 5kWh</td><td class="px-8 py-5 font-bold text-jl-dark">2,500.00 €</td><td class="px-8 py-5"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">En attente</span></td><td class="px-8 py-5"><div class="flex gap-2"><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><iconify-icon icon="lucide:edit-3"></iconify-icon></button></div></td></tr><tr class="hover:bg-slate-50 transition-colors"><td class="px-8 py-5 font-bold text-slate-700">#JL-9080</td><td class="px-8 py-5 text-slate-600">Entreprise BTP</td><td class="px-8 py-5 text-slate-600">Génératrice Diesel</td><td class="px-8 py-5 font-bold text-jl-dark">3,200.00 €</td><td class="px-8 py-5"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700">Traitement</span></td><td class="px-8 py-5"><div class="flex gap-2"><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><iconify-icon icon="lucide:edit-3"></iconify-icon></button></div></td></tr><tr class="hover:bg-slate-50 transition-colors"><td class="px-8 py-5 font-bold text-slate-700">#JL-9079</td><td class="px-8 py-5 text-slate-600">Lucas Petit</td><td class="px-8 py-5 text-slate-600">Kit Solaire Maison</td><td class="px-8 py-5 font-bold text-jl-dark">8,500.00 €</td><td class="px-8 py-5"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">Complété</span></td><td class="px-8 py-5"><div class="flex gap-2"><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><iconify-icon icon="lucide:edit-3"></iconify-icon></button></div></td></tr><tr class="hover:bg-slate-50 transition-colors"><td class="px-8 py-5 font-bold text-slate-700">#JL-9078</td><td class="px-8 py-5 text-slate-600">Sarah Bernard</td><td class="px-8 py-5 text-slate-600">Onduleur Hybride</td><td class="px-8 py-5 font-bold text-jl-dark">1,250.00 €</td><td class="px-8 py-5"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700">Annulé</span></td><td class="px-8 py-5"><div class="flex gap-2"><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><iconify-icon icon="lucide:edit-3"></iconify-icon></button></div></td></tr></tbody></table></div></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm"><h3 class="text-xl font-bold text-jl-dark mb-6">Produits les plus vendus</h3><div class="space-y-6"><div class="flex items-center gap-4 group cursor-pointer"><div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0"><img src="images/team-photo.jpg" alt="Panneau Solaire 400W Mono" class="w-full h-full object-cover"></div><div class="flex-1"><h4 class="font-bold text-slate-800 group-hover:text-jl-yellow transition-colors">Panneau Solaire 400W Mono</h4><div class="flex items-center gap-4 text-xs mt-1"><span class="text-slate-400 font-medium">Stock: <span class="text-slate-700">124</span></span><span class="text-slate-400 font-medium">Prix: <span class="text-slate-700 font-bold">350 €</span></span></div></div><div class="flex gap-2"><button class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-jl-yellow hover:text-jl-dark transition-all"><iconify-icon icon="lucide:edit-3" class="text-xs"></iconify-icon></button></div></div><div class="flex items-center gap-4 group cursor-pointer"><div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0"><img src="images/product-cables.jpg" alt="Batterie Lithium PowerWall" class="w-full h-full object-cover"></div><div class="flex-1"><h4 class="font-bold text-slate-800 group-hover:text-jl-yellow transition-colors">Batterie Lithium PowerWall</h4><div class="flex items-center gap-4 text-xs mt-1"><span class="text-slate-400 font-medium">Stock: <span class="text-slate-700">12</span></span><span class="text-slate-400 font-medium">Prix: <span class="text-slate-700 font-bold">2,500 €</span></span></div></div><div class="flex gap-2"><button class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-jl-yellow hover:text-jl-dark transition-all"><iconify-icon icon="lucide:edit-3" class="text-xs"></iconify-icon></button></div></div><div class="flex items-center gap-4 group cursor-pointer"><div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 flex-shrink-0"><img src="images/product-generator.jpg" alt="Onduleur Hybride 5kW" class="w-full h-full object-cover"></div><div class="flex-1"><h4 class="font-bold text-slate-800 group-hover:text-jl-yellow transition-colors">Onduleur Hybride 5kW</h4><div class="flex items-center gap-4 text-xs mt-1"><span class="text-slate-400 font-medium">Stock: <span class="text-slate-700">8</span></span><span class="text-slate-400 font-medium">Prix: <span class="text-slate-700 font-bold">1,800 €</span></span></div></div><div class="flex gap-2"><button class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-jl-yellow hover:text-jl-dark transition-all"><iconify-icon icon="lucide:edit-3" class="text-xs"></iconify-icon></button></div></div></div></div><div class="bg-jl-dark rounded-3xl p-8 text-white flex items-center justify-between overflow-hidden relative"><div class="absolute top-0 right-0 w-64 h-64 bg-jl-yellow/10 rounded-full -mr-20 -mt-20 blur-3xl"></div><div class="relative z-10 max-w-[60%]"><h3 class="text-2xl font-bold mb-4">Croissance Clients</h3><p class="text-slate-400 text-sm mb-6">Votre base de clients a augmenté de <span class="text-jl-yellow font-bold">+15.2%</span> par rapport au mois dernier.</p><button class="px-6 py-3 bg-jl-yellow text-jl-dark font-bold rounded-xl hover:bg-yellow-400 transition-all">Générer un rapport</button></div><div class="relative z-10 w-32 h-32 flex items-center justify-center"><iconify-icon icon="lucide:user-plus" class="text-8xl text-jl-yellow/20"></iconify-icon><div class="absolute inset-0 flex items-center justify-center"><span class="text-3xl font-black text-jl-yellow">+142</span></div></div></div></div></div></main></div>
-<!-- jlco-behavior-script -->
-<script>
-document.querySelectorAll('[id^="add-to-cart-"]').forEach(function (btn) {
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    var original = btn.textContent;
-    btn.textContent = 'Ajouté ✓';
-    btn.classList.add('opacity-75');
-    setTimeout(function () { btn.textContent = original; btn.classList.remove('opacity-75'); }, 1200);
-  });
-});
-document.querySelectorAll('#contact-form, #contact-submit-btn').forEach(function (el) {
-  el.addEventListener('submit', function (e) { e.preventDefault(); alert('Merci ! Votre message a bien été envoyé. Notre équipe vous répondra sous 24h.'); el.reset && el.reset(); });
-});
-var payBtn = document.getElementById('cta-pay-now');
-if (payBtn) { payBtn.addEventListener('click', function (e) { e.preventDefault(); window.location.href = 'confirmation.html'; }); }
-document.querySelectorAll('[id^="side-"]').forEach(function (link) {
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.querySelectorAll('[id^="side-"]').forEach(function (l) { l.classList.remove('bg-jl-yellow', 'text-jl-dark'); l.classList.add('text-white'); });
-    link.classList.remove('text-white');
-    link.classList.add('bg-jl-yellow', 'text-jl-dark');
-  });
-});
-</script>
-</body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin | JL &amp; Co</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Satoshi', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Clash Grotesk', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1a3a52; }
+    ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 10px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .nav-link.active { background-color: #FFD700 !important; color: #1a3a52 !important; font-weight: 700; }
+    .nav-link.active iconify-icon { color: #1a3a52 !important; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #FFD700; box-shadow: 0 0 0 3px rgba(255,215,0,0.15); }
+    .badge-nouveau { background: #dbeafe; color: #1d4ed8; }
+    .badge-encours { background: #fef3c7; color: #d97706; }
+    .badge-traite { background: #dcfce7; color: #16a34a; }
+    .badge-attente { background: #fef3c7; color: #d97706; }
+    .badge-traitement { background: #dbeafe; color: #1d4ed8; }
+    .badge-complete { background: #dcfce7; color: #16a34a; }
+    .badge-annule { background: #fee2e2; color: #dc2626; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .animate-spin { animation: spin 1s linear infinite; }
+    .modal-backdrop { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 flex overflow-hidden">
+
+  <!-- Auth loading overlay -->
+  <div id="auth-loading" class="fixed inset-0 bg-white z-[200] flex items-center justify-center">
+    <div class="text-center">
+      <div class="w-16 h-16 bg-jl-dark rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <iconify-icon icon="lucide:zap" class="text-jl-yellow text-3xl animate-spin"></iconify-icon>
+      </div>
+      <p class="text-slate-500 font-medium">Vérification de l'accès…</p>
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ──────────────────────────────────────────────────────────── -->
+  <aside class="w-64 bg-jl-dark text-white flex-shrink-0 flex flex-col z-50 shadow-2xl">
+    <div class="h-20 flex items-center px-6 border-b border-white/10">
+      <a href="index.html" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 bg-white/10 rounded flex items-center justify-center group-hover:bg-jl-yellow transition-colors">
+          <iconify-icon icon="lucide:zap" class="text-jl-yellow group-hover:text-jl-dark"></iconify-icon>
+        </div>
+        <span class="text-xl font-bold tracking-tight">JL <span class="text-jl-yellow">&</span> Co</span>
+      </a>
+    </div>
+
+    <nav class="flex-1 py-6 px-4 space-y-1 overflow-y-auto">
+      <button data-section="dash" class="nav-link active w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:layout-dashboard" class="text-xl shrink-0"></iconify-icon>
+        <span>Vue d'ensemble</span>
+      </button>
+      <button data-section="products" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:package" class="text-xl shrink-0"></iconify-icon>
+        <span>Produits</span>
+      </button>
+      <button data-section="orders" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:shopping-cart" class="text-xl shrink-0"></iconify-icon>
+        <span>Commandes</span>
+        <span id="badge-orders" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-white/10 hidden"></span>
+      </button>
+      <button data-section="quotes" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:file-text" class="text-xl shrink-0"></iconify-icon>
+        <span>Demandes de devis</span>
+        <span id="badge-quotes" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-jl-yellow text-jl-dark font-bold hidden"></span>
+      </button>
+      <button data-section="messages" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:mail" class="text-xl shrink-0"></iconify-icon>
+        <span>Messages</span>
+        <span id="badge-messages" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-jl-yellow text-jl-dark font-bold hidden"></span>
+      </button>
+    </nav>
+
+    <div class="p-4 border-t border-white/10">
+      <div class="bg-white/5 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-jl-yellow flex items-center justify-center font-bold text-jl-dark text-sm shrink-0" id="user-avatar">JL</div>
+        <div class="flex-1 truncate">
+          <p class="text-sm font-bold truncate" id="user-name">Administrateur</p>
+          <p class="text-xs text-slate-400 truncate" id="user-email">—</p>
+        </div>
+        <button id="logout-btn" title="Se déconnecter" class="text-slate-400 hover:text-red-400 transition-colors shrink-0">
+          <iconify-icon icon="lucide:log-out"></iconify-icon>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────────────────────────────── -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0 shadow-sm">
+      <h1 id="page-title" class="text-2xl font-bold text-jl-dark">Vue d'ensemble</h1>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-slate-400" id="header-date"></span>
+        <a href="index.html" target="_blank" class="flex items-center gap-2 text-sm text-slate-500 hover:text-jl-dark transition-colors">
+          <iconify-icon icon="lucide:external-link"></iconify-icon>
+          Voir le site
+        </a>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-8 space-y-8">
+
+      <!-- ══ SECTION: VUE D'ENSEMBLE ══════════════════════════════════════ -->
+      <div id="section-dash" class="section active space-y-8">
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl">
+                <iconify-icon icon="lucide:package"></iconify-icon>
+              </div>
+            </div>
+            <h3 class="text-slate-500 text-sm font-medium">Produits</h3>
+            <p class="text-3xl font-black text-jl-dark" id="kpi-products">—</p>
+          </div>
+          <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-2xl">
+                <iconify-icon icon="lucide:shopping-bag"></iconify-icon>
+              </div>
+            </div>
+            <h3 class="text-slate-500 text-sm font-medium">Commandes</h3>
+            <p class="text-3xl font-black text-jl-dark" id="kpi-orders">—</p>
+          </div>
+          <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center text-2xl">
+                <iconify-icon icon="lucide:file-text"></iconify-icon>
+              </div>
+            </div>
+            <h3 class="text-slate-500 text-sm font-medium">Devis reçus</h3>
+            <p class="text-3xl font-black text-jl-dark" id="kpi-quotes">—</p>
+          </div>
+          <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-2xl">
+                <iconify-icon icon="lucide:mail"></iconify-icon>
+              </div>
+            </div>
+            <h3 class="text-slate-500 text-sm font-medium">Messages</h3>
+            <p class="text-3xl font-black text-jl-dark" id="kpi-messages">—</p>
+          </div>
+        </div>
+
+        <!-- Recent Quotes + Recent Messages -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="text-lg font-bold text-jl-dark">Derniers devis reçus</h3>
+              <button data-section="quotes" class="nav-link-shortcut text-sm text-jl-dark font-bold hover:text-jl-yellow transition-colors">Voir tout →</button>
+            </div>
+            <div id="dash-quotes-list" class="divide-y divide-slate-50"></div>
+            <div id="dash-quotes-empty" class="hidden p-8 text-center text-slate-400">
+              <iconify-icon icon="lucide:file-text" class="text-4xl mb-2"></iconify-icon>
+              <p class="text-sm">Aucun devis pour l'instant</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="text-lg font-bold text-jl-dark">Derniers messages</h3>
+              <button data-section="messages" class="nav-link-shortcut text-sm text-jl-dark font-bold hover:text-jl-yellow transition-colors">Voir tout →</button>
+            </div>
+            <div id="dash-messages-list" class="divide-y divide-slate-50"></div>
+            <div id="dash-messages-empty" class="hidden p-8 text-center text-slate-400">
+              <iconify-icon icon="lucide:mail" class="text-4xl mb-2"></iconify-icon>
+              <p class="text-sm">Aucun message pour l'instant</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: PRODUITS ═════════════════════════════════════════════ -->
+      <div id="section-products" class="section space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-jl-dark">Catalogue Produits</h2>
+            <p class="text-sm text-slate-500 mt-1">Gérez les produits affichés sur votre boutique.</p>
+          </div>
+          <button id="add-product-btn" class="flex items-center gap-2 px-6 py-3 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg">
+            <iconify-icon icon="lucide:plus"></iconify-icon>
+            Ajouter un produit
+          </button>
+        </div>
+
+        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        <div id="products-empty" class="hidden bg-white rounded-3xl border border-slate-200 p-16 text-center">
+          <iconify-icon icon="lucide:package-open" class="text-6xl text-slate-300 mb-4"></iconify-icon>
+          <h3 class="text-xl font-bold text-slate-500 mb-2">Aucun produit</h3>
+          <p class="text-slate-400 mb-6">Ajoutez votre premier produit pour le faire apparaître dans la boutique.</p>
+          <button id="add-product-btn-empty" class="px-6 py-3 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all">
+            <iconify-icon icon="lucide:plus"></iconify-icon> Ajouter un produit
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: COMMANDES ════════════════════════════════════════════ -->
+      <div id="section-orders" class="section space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-jl-dark">Commandes</h2>
+          <p class="text-sm text-slate-500 mt-1">Suivez et gérez les commandes de vos clients.</p>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">ID</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Client</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Produit</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Montant</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Statut</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Date</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body" class="divide-y divide-slate-50"></tbody>
+            </table>
+          </div>
+          <div id="orders-empty" class="hidden p-16 text-center">
+            <iconify-icon icon="lucide:shopping-cart" class="text-6xl text-slate-300 mb-4"></iconify-icon>
+            <h3 class="text-xl font-bold text-slate-500 mb-2">Aucune commande</h3>
+            <p class="text-slate-400">Les commandes de vos clients apparaîtront ici.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: DEVIS ════════════════════════════════════════════════ -->
+      <div id="section-quotes" class="section space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-jl-dark">Demandes de devis</h2>
+          <p class="text-sm text-slate-500 mt-1">Consultez et traitez les demandes de devis reçues.</p>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Nom</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Email</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Service</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Statut</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Date</th>
+                  <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-slate-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="quotes-table-body" class="divide-y divide-slate-50"></tbody>
+            </table>
+          </div>
+          <div id="quotes-empty" class="hidden p-16 text-center">
+            <iconify-icon icon="lucide:file-text" class="text-6xl text-slate-300 mb-4"></iconify-icon>
+            <h3 class="text-xl font-bold text-slate-500 mb-2">Aucune demande de devis</h3>
+            <p class="text-slate-400">Les demandes de devis soumises sur votre site apparaîtront ici.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: MESSAGES ═════════════════════════════════════════════ -->
+      <div id="section-messages" class="section space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-jl-dark">Messages de contact</h2>
+          <p class="text-sm text-slate-500 mt-1">Messages reçus via le formulaire de contact.</p>
+        </div>
+        <div id="messages-list" class="space-y-4"></div>
+        <div id="messages-empty" class="hidden bg-white rounded-3xl border border-slate-200 p-16 text-center">
+          <iconify-icon icon="lucide:mail-open" class="text-6xl text-slate-300 mb-4"></iconify-icon>
+          <h3 class="text-xl font-bold text-slate-500 mb-2">Aucun message</h3>
+          <p class="text-slate-400">Les messages envoyés depuis votre formulaire de contact apparaîtront ici.</p>
+        </div>
+      </div>
+
+    </div><!-- /overflow-y-auto -->
+  </main>
+
+  <!-- ══ MODAL: ADD / EDIT PRODUCT ════════════════════════════════════════ -->
+  <div id="modal-product" class="hidden fixed inset-0 z-[100] modal-backdrop flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="p-8 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white rounded-t-3xl">
+        <h2 id="modal-product-title" class="text-2xl font-bold text-jl-dark">Ajouter un produit</h2>
+        <button id="modal-product-close" class="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-all">
+          <iconify-icon icon="lucide:x"></iconify-icon>
+        </button>
+      </div>
+      <form id="product-form" class="p-8 space-y-5">
+        <input type="hidden" id="product-id">
+        <div>
+          <label class="block text-sm font-bold text-jl-dark mb-2">Nom du produit *</label>
+          <input id="p-name" type="text" placeholder="Ex: Panneau Solaire 400W" required
+            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-jl-dark mb-2">Catégorie *</label>
+            <select id="p-categorie" required class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+              <option value="">Choisir…</option>
+              <option>Panneaux Solaires</option>
+              <option>Batteries</option>
+              <option>Onduleurs</option>
+              <option>Génératrices</option>
+              <option>Accessoires</option>
+              <option>Câbles & Connecteurs</option>
+              <option>Régulateurs MPPT</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-jl-dark mb-2">Prix (HTG) *</label>
+            <input id="p-prix" type="number" min="0" step="0.01" placeholder="0.00" required
+              class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-jl-dark mb-2">Stock</label>
+            <input id="p-stock" type="number" min="0" placeholder="0"
+              class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-jl-dark mb-2">Marque</label>
+            <input id="p-marque" type="text" placeholder="Ex: Canadian Solar"
+              class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-jl-dark mb-2">Description</label>
+          <textarea id="p-description" rows="3" placeholder="Description du produit…"
+            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-jl-dark mb-2">URL de l'image</label>
+          <input id="p-image" type="url" placeholder="https://…"
+            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+        </div>
+        <div id="product-form-error" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700"></div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="modal-product-cancel" class="flex-1 py-3 border border-slate-200 rounded-2xl font-bold text-slate-600 hover:bg-slate-50 transition-all">
+            Annuler
+          </button>
+          <button type="submit" id="product-submit-btn" class="flex-1 py-3 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg">
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: DETAIL VIEW ════════════════════════════════════════════════ -->
+  <div id="modal-detail" class="hidden fixed inset-0 z-[100] modal-backdrop flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="p-8 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white rounded-t-3xl">
+        <h2 id="modal-detail-title" class="text-2xl font-bold text-jl-dark">Détails</h2>
+        <button id="modal-detail-close" class="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-all">
+          <iconify-icon icon="lucide:x"></iconify-icon>
+        </button>
+      </div>
+      <div id="modal-detail-body" class="p-8 space-y-4"></div>
+      <div id="modal-detail-actions" class="p-8 pt-0 flex gap-3"></div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ─────────────────────────────────────────────────────────── -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-6 py-4 bg-jl-dark text-white rounded-2xl shadow-2xl font-medium text-sm transition-all">
+    <iconify-icon id="toast-icon" icon="lucide:check-circle" class="text-jl-yellow text-xl shrink-0"></iconify-icon>
+    <span id="toast-text"></span>
+  </div>
+
+  <!-- ══ SCRIPTS ──────────────────────────────────────────────────────────── -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    // ── Helpers ─────────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    function fmt(d) { return d ? new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' }) : '—'; }
+    function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function showToast(msg, ok = true) {
+      const t = $('toast'), icon = $('toast-icon'), text = $('toast-text');
+      icon.setAttribute('icon', ok ? 'lucide:check-circle' : 'lucide:alert-circle');
+      icon.className = ok ? 'text-jl-yellow text-xl shrink-0' : 'text-red-400 text-xl shrink-0';
+      text.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    async function api(method, path, body) {
+      const opts = { method, headers: { 'Content-Type': 'application/json' } };
+      if (body) opts.body = JSON.stringify(body);
+      const r = await fetch(path, opts);
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+
+    function badge(statut) {
+      const map = {
+        'Nouveau': 'badge-nouveau', 'En cours': 'badge-encours', 'Traité': 'badge-traite',
+        'En attente': 'badge-attente', 'Traitement': 'badge-traitement', 'Complété': 'badge-complete',
+        'Annulé': 'badge-annule', 'Lu': 'badge-traite',
+      };
+      const cls = map[statut] || 'badge-nouveau';
+      return `<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide ${cls}">${escHtml(statut)}</span>`;
+    }
+
+    // ── Header date ─────────────────────────────────────────────────────
+    $('header-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    // ── Navigation ───────────────────────────────────────────────────────
+    const sections = ['dash','products','orders','quotes','messages'];
+    const titles = { dash:'Vue d\'ensemble', products:'Produits', orders:'Commandes', quotes:'Demandes de devis', messages:'Messages' };
+
+    function showSection(name) {
+      sections.forEach(s => {
+        $(`section-${s}`).classList.remove('active');
+      });
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      $(`section-${name}`).classList.add('active');
+      document.querySelector(`[data-section="${name}"]`).classList.add('active');
+      $('page-title').textContent = titles[name] || name;
+      loadSection(name);
+    }
+
+    document.querySelectorAll('[data-section]').forEach(btn => {
+      btn.addEventListener('click', () => showSection(btn.dataset.section));
+    });
+    document.querySelectorAll('.nav-link-shortcut').forEach(btn => {
+      btn.addEventListener('click', () => showSection(btn.dataset.section));
+    });
+
+    // ── Dashboard Overview ────────────────────────────────────────────────
+    async function loadDash() {
+      const [produits, commandes, devis, contacts] = await Promise.all([
+        api('GET','/api/produits'), api('GET','/api/commandes'),
+        api('GET','/api/devis'), api('GET','/api/contacts'),
+      ]);
+      $('kpi-products').textContent = produits.length;
+      $('kpi-orders').textContent = commandes.length;
+      $('kpi-quotes').textContent = devis.length;
+      $('kpi-messages').textContent = contacts.length;
+
+      // Badges
+      const unreadQ = devis.filter(d => !d.lu).length;
+      const unreadM = contacts.filter(c => !c.lu).length;
+      const bq = $('badge-quotes'), bm = $('badge-messages');
+      if (unreadQ > 0) { bq.textContent = unreadQ; bq.classList.remove('hidden'); } else bq.classList.add('hidden');
+      if (unreadM > 0) { bm.textContent = unreadM; bm.classList.remove('hidden'); } else bm.classList.add('hidden');
+
+      // Recent devis
+      const dList = $('dash-quotes-list'), dEmpty = $('dash-quotes-empty');
+      if (devis.length === 0) { dList.innerHTML=''; dEmpty.classList.remove('hidden'); }
+      else {
+        dEmpty.classList.add('hidden');
+        dList.innerHTML = devis.slice(0,5).map(d => `
+          <div class="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-jl-dark/5 flex items-center justify-center shrink-0">
+              <iconify-icon icon="lucide:user" class="text-jl-dark"></iconify-icon>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-slate-800 truncate">${escHtml(d.nom||'—')}</p>
+              <p class="text-xs text-slate-400">${escHtml(d.service||d.type||'—')} · ${fmt(d.createdAt)}</p>
+            </div>
+            ${badge(d.statut||'Nouveau')}
+          </div>`).join('');
+      }
+
+      // Recent messages
+      const mList = $('dash-messages-list'), mEmpty = $('dash-messages-empty');
+      if (contacts.length === 0) { mList.innerHTML=''; mEmpty.classList.remove('hidden'); }
+      else {
+        mEmpty.classList.add('hidden');
+        mList.innerHTML = contacts.slice(0,5).map(c => `
+          <div class="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center shrink-0">
+              <iconify-icon icon="lucide:mail" class="text-purple-500"></iconify-icon>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-slate-800 truncate">${escHtml(c.nom||'—')}</p>
+              <p class="text-xs text-slate-400 truncate">${escHtml(c.sujet||c.message||'—')} · ${fmt(c.createdAt)}</p>
+            </div>
+            ${c.lu ? '' : '<span class="w-2 h-2 rounded-full bg-jl-yellow shrink-0"></span>'}
+          </div>`).join('');
+      }
+    }
+
+    // ── Products ──────────────────────────────────────────────────────────
+    async function loadProducts() {
+      const items = await api('GET','/api/produits');
+      const grid = $('products-grid'), empty = $('products-empty');
+      if (items.length === 0) { grid.innerHTML=''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      grid.innerHTML = items.map(p => `
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group hover:shadow-md transition-all">
+          <div class="aspect-video bg-slate-100 relative overflow-hidden">
+            ${p.image ? `<img src="${escHtml(p.image)}" alt="${escHtml(p.nom)}" class="w-full h-full object-cover">` :
+              `<div class="absolute inset-0 flex items-center justify-center text-slate-300">
+                <iconify-icon icon="lucide:image" class="text-5xl"></iconify-icon>
+              </div>`}
+            <span class="absolute top-3 left-3 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-xs font-bold text-slate-600">${escHtml(p.categorie||'—')}</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-bold text-jl-dark text-lg leading-tight mb-1">${escHtml(p.nom)}</h3>
+            ${p.marque ? `<p class="text-xs text-slate-400 mb-3">${escHtml(p.marque)}</p>` : '<div class="mb-3"></div>'}
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xl font-black text-jl-dark">${Number(p.prix||0).toLocaleString('fr-FR')} HTG</span>
+              <span class="text-sm font-medium text-slate-500">Stock: <span class="font-bold text-slate-700">${p.stock||0}</span></span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="editProduct('${p.id}')" class="flex-1 py-2 bg-slate-50 hover:bg-jl-yellow hover:text-jl-dark border border-slate-200 rounded-xl font-bold text-sm text-slate-600 transition-all flex items-center justify-center gap-1">
+                <iconify-icon icon="lucide:edit-3"></iconify-icon> Modifier
+              </button>
+              <button onclick="deleteProduct('${p.id}','${escHtml(p.nom)}')" class="py-2 px-3 bg-slate-50 hover:bg-red-50 hover:text-red-600 hover:border-red-200 border border-slate-200 rounded-xl text-slate-400 transition-all">
+                <iconify-icon icon="lucide:trash-2"></iconify-icon>
+              </button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+
+    // ── Orders ────────────────────────────────────────────────────────────
+    async function loadOrders() {
+      const items = await api('GET','/api/commandes');
+      const tbody = $('orders-table-body'), empty = $('orders-empty');
+      if (items.length === 0) { tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      tbody.innerHTML = items.map(c => `
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-6 py-4 font-bold text-slate-700 text-sm">#${escHtml(c.id)}</td>
+          <td class="px-6 py-4 text-slate-600 text-sm">${escHtml(c.client||c.nom||'—')}</td>
+          <td class="px-6 py-4 text-slate-600 text-sm">${escHtml(c.produit||'—')}</td>
+          <td class="px-6 py-4 font-bold text-jl-dark text-sm">${Number(c.montant||0).toLocaleString('fr-FR')} HTG</td>
+          <td class="px-6 py-4">${badge(c.statut||'En attente')}</td>
+          <td class="px-6 py-4 text-slate-400 text-xs">${fmt(c.createdAt)}</td>
+          <td class="px-6 py-4">
+            <div class="flex gap-2">
+              <button onclick="viewOrder('${c.id}')" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all" title="Voir">
+                <iconify-icon icon="lucide:eye"></iconify-icon>
+              </button>
+              <button onclick="updateOrderStatus('${c.id}')" class="p-2 hover:bg-jl-yellow/20 rounded-lg text-slate-400 hover:text-jl-dark transition-all" title="Changer statut">
+                <iconify-icon icon="lucide:refresh-cw"></iconify-icon>
+              </button>
+              <button onclick="deleteOrder('${c.id}')" class="p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-all" title="Supprimer">
+                <iconify-icon icon="lucide:trash-2"></iconify-icon>
+              </button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    // ── Quotes ────────────────────────────────────────────────────────────
+    async function loadQuotes() {
+      const items = await api('GET','/api/devis');
+      const tbody = $('quotes-table-body'), empty = $('quotes-empty');
+      if (items.length === 0) { tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      tbody.innerHTML = items.map(d => `
+        <tr class="hover:bg-slate-50 transition-colors ${!d.lu ? 'bg-blue-50/30' : ''}">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              ${!d.lu ? '<span class="w-2 h-2 rounded-full bg-jl-yellow shrink-0"></span>' : '<span class="w-2 h-2 shrink-0"></span>'}
+              <span class="font-bold text-slate-700 text-sm">${escHtml(d.nom||'—')}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-slate-500 text-sm">${escHtml(d.email||'—')}</td>
+          <td class="px-6 py-4 text-slate-600 text-sm">${escHtml(d.service||d.type||'—')}</td>
+          <td class="px-6 py-4">${badge(d.statut||'Nouveau')}</td>
+          <td class="px-6 py-4 text-slate-400 text-xs">${fmt(d.createdAt)}</td>
+          <td class="px-6 py-4">
+            <div class="flex gap-2">
+              <button onclick="viewQuote('${d.id}')" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-jl-dark transition-all" title="Voir">
+                <iconify-icon icon="lucide:eye"></iconify-icon>
+              </button>
+              <button onclick="cycleQuoteStatus('${d.id}')" class="p-2 hover:bg-jl-yellow/20 rounded-lg text-slate-400 hover:text-jl-dark transition-all" title="Changer statut">
+                <iconify-icon icon="lucide:refresh-cw"></iconify-icon>
+              </button>
+              <button onclick="deleteQuote('${d.id}')" class="p-2 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-all" title="Supprimer">
+                <iconify-icon icon="lucide:trash-2"></iconify-icon>
+              </button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    // ── Messages ──────────────────────────────────────────────────────────
+    async function loadMessages() {
+      const items = await api('GET','/api/contacts');
+      const list = $('messages-list'), empty = $('messages-empty');
+      if (items.length === 0) { list.innerHTML=''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      list.innerHTML = items.map(c => `
+        <div class="bg-white rounded-3xl border ${!c.lu ? 'border-jl-yellow/50 shadow-md' : 'border-slate-200 shadow-sm'} p-6">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center shrink-0">
+                <iconify-icon icon="lucide:user" class="text-purple-500 text-xl"></iconify-icon>
+              </div>
+              <div>
+                <div class="flex items-center gap-3 flex-wrap">
+                  <p class="font-bold text-jl-dark">${escHtml(c.nom||'—')}</p>
+                  ${!c.lu ? '<span class="px-2 py-0.5 rounded-full bg-jl-yellow text-jl-dark text-[10px] font-bold">NOUVEAU</span>' : ''}
+                </div>
+                <p class="text-sm text-slate-400 mt-0.5">${escHtml(c.email||'—')} · ${escHtml(c.telephone||'')}</p>
+                <p class="text-xs text-slate-400 mt-0.5">${fmt(c.createdAt)}</p>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              ${!c.lu ? `<button onclick="markMessageRead('${c.id}')" class="px-3 py-1.5 bg-jl-dark text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-all">Marquer lu</button>` : ''}
+              <button onclick="deleteMessage('${c.id}')" class="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all">
+                <iconify-icon icon="lucide:trash-2"></iconify-icon>
+              </button>
+            </div>
+          </div>
+          ${c.sujet ? `<div class="mt-4 pt-4 border-t border-slate-100"><p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Sujet</p><p class="text-sm font-bold text-slate-700">${escHtml(c.sujet)}</p></div>` : ''}
+          ${c.message ? `<div class="mt-3"><p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Message</p><p class="text-sm text-slate-600 leading-relaxed">${escHtml(c.message)}</p></div>` : ''}
+        </div>`).join('');
+    }
+
+    // ── Section loader ────────────────────────────────────────────────────
+    function loadSection(name) {
+      if (name === 'dash') return loadDash();
+      if (name === 'products') return loadProducts();
+      if (name === 'orders') return loadOrders();
+      if (name === 'quotes') return loadQuotes();
+      if (name === 'messages') return loadMessages();
+    }
+
+    // ── Product CRUD ──────────────────────────────────────────────────────
+    let productCache = [];
+    async function refreshProductCache() { productCache = await api('GET','/api/produits'); }
+
+    function openProductModal(product = null) {
+      $('modal-product').classList.remove('hidden');
+      $('modal-product-title').textContent = product ? 'Modifier le produit' : 'Ajouter un produit';
+      $('product-id').value = product ? product.id : '';
+      $('p-name').value = product ? product.nom||'' : '';
+      $('p-categorie').value = product ? product.categorie||'' : '';
+      $('p-prix').value = product ? product.prix||'' : '';
+      $('p-stock').value = product ? product.stock||'' : '';
+      $('p-marque').value = product ? product.marque||'' : '';
+      $('p-description').value = product ? product.description||'' : '';
+      $('p-image').value = product ? product.image||'' : '';
+      $('product-form-error').classList.add('hidden');
+    }
+
+    window.editProduct = async function(id) {
+      await refreshProductCache();
+      const p = productCache.find(x => x.id === id);
+      if (p) openProductModal(p);
+    };
+
+    window.deleteProduct = async function(id, name) {
+      if (!confirm(`Supprimer "${name}" ? Cette action est irréversible.`)) return;
+      await api('DELETE', `/api/produits/${id}`);
+      showToast('Produit supprimé.');
+      loadProducts();
+    };
+
+    $('add-product-btn').addEventListener('click', () => openProductModal());
+    const addEmpty = $('add-product-btn-empty');
+    if (addEmpty) addEmpty.addEventListener('click', () => openProductModal());
+
+    function closeProductModal() { $('modal-product').classList.add('hidden'); }
+    $('modal-product-close').addEventListener('click', closeProductModal);
+    $('modal-product-cancel').addEventListener('click', closeProductModal);
+
+    $('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = $('product-id').value;
+      const data = {
+        nom: $('p-name').value.trim(),
+        categorie: $('p-categorie').value,
+        prix: parseFloat($('p-prix').value) || 0,
+        stock: parseInt($('p-stock').value) || 0,
+        marque: $('p-marque').value.trim(),
+        description: $('p-description').value.trim(),
+        image: $('p-image').value.trim(),
+      };
+      try {
+        if (id) { await api('PUT', `/api/produits/${id}`, data); showToast('Produit modifié !'); }
+        else { await api('POST', '/api/produits', data); showToast('Produit ajouté !'); }
+        closeProductModal();
+        loadProducts();
+      } catch(err) {
+        const errEl = $('product-form-error');
+        errEl.textContent = 'Erreur : ' + err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+
+    // ── Order actions ─────────────────────────────────────────────────────
+    const orderStatuses = ['En attente', 'Traitement', 'Complété', 'Annulé'];
+    window.updateOrderStatus = async function(id) {
+      const orders = await api('GET','/api/commandes');
+      const order = orders.find(o => o.id === id);
+      if (!order) return;
+      const cur = orderStatuses.indexOf(order.statut);
+      const next = orderStatuses[(cur + 1) % orderStatuses.length];
+      await api('PUT', `/api/commandes/${id}`, { statut: next });
+      showToast(`Statut → ${next}`);
+      loadOrders();
+    };
+
+    window.viewOrder = async function(id) {
+      const orders = await api('GET','/api/commandes');
+      const o = orders.find(x => x.id === id);
+      if (!o) return;
+      $('modal-detail-title').textContent = `Commande #${o.id}`;
+      $('modal-detail-body').innerHTML = `
+        <div class="space-y-3">
+          ${row('Client', o.client||o.nom)} ${row('Produit', o.produit)} ${row('Montant', `${Number(o.montant||0).toLocaleString('fr-FR')} HTG`)}
+          ${row('Statut', badge(o.statut||'En attente'))} ${row('Date', fmt(o.createdAt))}
+          ${o.email ? row('Email', o.email) : ''} ${o.telephone ? row('Tél', o.telephone) : ''}
+        </div>`;
+      $('modal-detail-actions').innerHTML = '';
+      $('modal-detail').classList.remove('hidden');
+    };
+
+    window.deleteOrder = async function(id) {
+      if (!confirm('Supprimer cette commande ?')) return;
+      await api('DELETE', `/api/commandes/${id}`);
+      showToast('Commande supprimée.');
+      loadOrders();
+    };
+
+    // ── Quote actions ─────────────────────────────────────────────────────
+    const quoteStatuses = ['Nouveau', 'En cours', 'Traité'];
+    window.cycleQuoteStatus = async function(id) {
+      const items = await api('GET','/api/devis');
+      const d = items.find(x => x.id === id);
+      if (!d) return;
+      const cur = quoteStatuses.indexOf(d.statut);
+      const next = quoteStatuses[(cur + 1) % quoteStatuses.length];
+      await api('PUT', `/api/devis/${id}`, { statut: next, lu: true });
+      showToast(`Statut → ${next}`);
+      loadQuotes(); loadDash();
+    };
+
+    window.viewQuote = async function(id) {
+      const items = await api('GET','/api/devis');
+      const d = items.find(x => x.id === id);
+      if (!d) return;
+      await api('PUT', `/api/devis/${id}`, { lu: true });
+      $('modal-detail-title').textContent = 'Demande de devis';
+      $('modal-detail-body').innerHTML = `
+        <div class="space-y-3">
+          ${row('Nom', d.nom)} ${row('Email', d.email)} ${row('Téléphone', d.telephone)}
+          ${row('Service', d.service||d.type)} ${row('Statut', badge(d.statut||'Nouveau'))} ${row('Date', fmt(d.createdAt))}
+          ${d.message ? `<div><p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Message</p><p class="text-sm text-slate-600 bg-slate-50 p-3 rounded-xl leading-relaxed">${escHtml(d.message)}</p></div>` : ''}
+          ${d.budget ? row('Budget', d.budget) : ''} ${d.localisation ? row('Localisation', d.localisation) : ''}
+        </div>`;
+      $('modal-detail-actions').innerHTML = `
+        <button onclick="cycleQuoteStatus('${d.id}'); document.getElementById('modal-detail').classList.add('hidden');" class="flex-1 py-3 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all">Changer le statut</button>`;
+      $('modal-detail').classList.remove('hidden');
+      loadQuotes(); loadDash();
+    };
+
+    window.deleteQuote = async function(id) {
+      if (!confirm('Supprimer cette demande de devis ?')) return;
+      await api('DELETE', `/api/devis/${id}`);
+      showToast('Devis supprimé.');
+      loadQuotes(); loadDash();
+    };
+
+    // ── Message actions ───────────────────────────────────────────────────
+    window.markMessageRead = async function(id) {
+      await api('PUT', `/api/contacts/${id}`, { lu: true });
+      showToast('Marqué comme lu.');
+      loadMessages(); loadDash();
+    };
+    window.deleteMessage = async function(id) {
+      if (!confirm('Supprimer ce message ?')) return;
+      await api('DELETE', `/api/contacts/${id}`);
+      showToast('Message supprimé.');
+      loadMessages(); loadDash();
+    };
+
+    // ── Detail modal ──────────────────────────────────────────────────────
+    function row(label, val) {
+      if (!val && val !== 0) return '';
+      return `<div class="flex items-start gap-3"><span class="text-xs font-bold text-slate-400 uppercase tracking-widest w-24 shrink-0 pt-0.5">${escHtml(label)}</span><span class="text-sm font-medium text-slate-700">${val}</span></div>`;
+    }
+    $('modal-detail-close').addEventListener('click', () => $('modal-detail').classList.add('hidden'));
+
+    // Close modals on backdrop click
+    [$('modal-product'), $('modal-detail')].forEach(modal => {
+      modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+    });
+
+    // ── Firebase Auth ─────────────────────────────────────────────────────
+    try {
+      const cfg = await fetch('/api/config').then(r => r.json());
+      const adminEmails = (cfg.adminEmails || []).map(e => e.toLowerCase());
+
+      if (!cfg.configured || !cfg.firebase.apiKey) {
+        // No Firebase → show dashboard without auth (dev mode)
+        $('auth-loading').classList.add('hidden');
+        $('user-email').textContent = 'Mode dev (sans auth)';
+        loadDash();
+        return;
+      }
+
+      const app = initializeApp(cfg.firebase);
+      const auth = getAuth(app);
+
+      onAuthStateChanged(auth, user => {
+        $('auth-loading').classList.add('hidden');
+        if (!user || !adminEmails.includes(user.email.toLowerCase())) {
+          window.location.href = '/login.html';
+          return;
+        }
+        // Update UI
+        const initials = user.displayName ? user.displayName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : user.email.slice(0,2).toUpperCase();
+        $('user-avatar').textContent = initials;
+        $('user-name').textContent = user.displayName || 'Administrateur';
+        $('user-email').textContent = user.email;
+        loadDash();
+      });
+
+      $('logout-btn').addEventListener('click', async () => {
+        if (!confirm('Se déconnecter ?')) return;
+        await signOut(auth);
+        window.location.href = '/login.html';
+      });
+
+    } catch(e) {
+      $('auth-loading').classList.add('hidden');
+      loadDash();
+    }
+  </script>
+</body>
+</html>

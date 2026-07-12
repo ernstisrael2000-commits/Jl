@@ -13,10 +13,10 @@ const path = require("path");
 
 const dir = path.join(__dirname, "..", "public");
 
-const WHATSAPP_NUMBER = "50912345678"; // placeholder — update with the real number
-const PHONE_DISPLAY = "+509 1234 5678";
-const PHONE_TEL = "tel:+50912345678";
-const EMAIL = "contact@jlco-energy.com";
+const WHATSAPP_NUMBER = "50937257586";
+const PHONE_DISPLAY = "+509 3659 2772";
+const PHONE_TEL = "tel:+50936592772";
+const EMAIL = "Venelsonliberus11@gmail.com";
 const WA_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   "Bonjour JL & Co, je souhaite en savoir plus sur vos services."
 )}`;
