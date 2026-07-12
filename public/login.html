@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion Admin | JL &amp; Co</title>
+  <title>Connexion | JL &amp; Co</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -28,13 +28,13 @@
         </div>
         <span class="text-3xl font-bold text-jl-dark">JL <span class="text-jl-yellow">&</span> Co</span>
       </a>
-      <p class="mt-3 text-slate-500 font-medium">Espace Administrateur</p>
+      <p class="mt-3 text-slate-500 font-medium">Mon espace JL &amp; Co</p>
     </div>
 
     <!-- Card -->
     <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
       <h1 class="text-2xl font-bold text-jl-dark mb-2">Connexion</h1>
-      <p class="text-slate-500 text-sm mb-8">Accès réservé aux administrateurs JL &amp; Co.</p>
+      <p class="text-slate-500 text-sm mb-8">Connectez-vous pour accéder à toutes les fonctionnalités.</p>
 
       <!-- Firebase not configured warning -->
       <div id="config-warning" class="hidden mb-6 p-4 bg-orange-50 border border-orange-200 rounded-2xl">
@@ -178,9 +178,12 @@
 
         // Already logged in?
         onAuthStateChanged(auth, user => {
-          if (user && adminEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase())) {
+          if (user) {
             showSuccess('Connexion réussie ! Redirection...');
-            setTimeout(() => window.location.href = '/dashboard.html', 800);
+            const dest = adminEmails.map(e=>e.toLowerCase()).includes(user.email.toLowerCase())
+              ? '/dashboard.html'
+              : (new URLSearchParams(window.location.search).get('next') || '/');
+            setTimeout(() => window.location.href = dest, 600);
           }
         });
       }
@@ -188,26 +191,29 @@
       showError('Impossible de contacter le serveur.');
     }
 
-    // Google sign-in
+    // Helper: redirect after login based on role
+    function redirectAfterLogin(user) {
+      const next = new URLSearchParams(window.location.search).get('next') || '/';
+      const dest = adminEmails.map(e=>e.toLowerCase()).includes(user.email.toLowerCase())
+        ? '/dashboard.html' : next;
+      showSuccess('Connexion réussie ! Redirection...');
+      setTimeout(() => window.location.href = dest, 600);
+    }
+
+    // Google sign-in (open to all users)
     document.getElementById('google-btn').addEventListener('click', async () => {
       if (!auth) return;
       errorEl.classList.add('hidden');
       try {
         const cred = await signInWithPopup(auth, provider);
-        if (!adminEmails.map(e => e.toLowerCase()).includes(cred.user.email.toLowerCase())) {
-          await auth.signOut();
-          showError('Accès refusé. Ce compte Google n\'est pas autorisé en tant qu\'administrateur.');
-          return;
-        }
-        showSuccess('Connexion réussie ! Redirection...');
-        setTimeout(() => window.location.href = '/dashboard.html', 800);
+        redirectAfterLogin(cred.user);
       } catch(err) {
         if (err.code === 'auth/popup-closed-by-user') return;
         showError('Erreur lors de la connexion Google. Réessayez.');
       }
     });
 
-    // Email/password sign-in
+    // Email/password sign-in (open to all users)
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!auth) return;
@@ -217,18 +223,13 @@
       setLoading(true);
       try {
         const cred = await signInWithEmailAndPassword(auth, email, password);
-        if (!adminEmails.map(e => e.toLowerCase()).includes(cred.user.email.toLowerCase())) {
-          await auth.signOut();
-          showError('Accès refusé. Cet email n\'est pas autorisé en tant qu\'administrateur.');
-          setLoading(false);
-          return;
-        }
-        showSuccess('Connexion réussie ! Redirection...');
-        setTimeout(() => window.location.href = '/dashboard.html', 800);
+        redirectAfterLogin(cred.user);
       } catch(err) {
         setLoading(false);
-        if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        if (['auth/user-not-found','auth/wrong-password','auth/invalid-credential'].includes(err.code)) {
           showError('Email ou mot de passe incorrect.');
+        } else if (err.code === 'auth/too-many-requests') {
+          showError('Trop de tentatives. Réessayez dans quelques minutes.');
         } else {
           showError('Erreur de connexion : ' + err.message);
         }
