@@ -53,6 +53,17 @@
       <!-- Success message -->
       <div id="success-msg" class="hidden mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl text-sm text-green-700 font-medium"></div>
 
+      <!-- In-app browser warning (Google blocks sign-in inside embedded webviews) -->
+      <div id="webview-warning" class="hidden mb-6 p-4 bg-orange-50 border border-orange-200 rounded-2xl">
+        <div class="flex gap-3">
+          <iconify-icon icon="lucide:alert-triangle" class="text-orange-500 text-xl shrink-0 mt-0.5"></iconify-icon>
+          <div>
+            <p class="text-sm font-bold text-orange-700">Navigateur intégré détecté</p>
+            <p class="text-xs text-orange-600 mt-1">Google bloque la connexion depuis les navigateurs intégrés (WhatsApp, Instagram, Messenger…). Ouvrez ce lien dans Chrome ou Safari, ou utilisez l'email/mot de passe ci-dessous.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Google Sign In -->
       <button id="google-btn" class="w-full flex items-center justify-center gap-3 px-6 py-4 border-2 border-slate-200 rounded-2xl font-bold text-slate-700 hover:border-jl-yellow hover:bg-jl-yellow/5 transition-all mb-6">
         <iconify-icon icon="logos:google-icon" class="text-xl"></iconify-icon>
@@ -95,6 +106,13 @@
         </button>
       </form>
 
+      <!-- Forgot password / set a password -->
+      <div class="mt-4 text-center">
+        <button id="forgot-pw-btn" type="button" class="text-sm text-slate-500 hover:text-jl-dark transition-colors underline">
+          Mot de passe oublié ou pas encore défini ?
+        </button>
+      </div>
+
       <!-- Back to site -->
       <div class="mt-6 text-center">
         <a href="index.html" class="text-sm text-slate-400 hover:text-jl-dark transition-colors">
@@ -123,7 +141,19 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getAuth, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    // Detect embedded/in-app browsers (WhatsApp, Instagram, Facebook, Messenger,
+    // TikTok, Line…) where Google explicitly blocks OAuth sign-in for security
+    // reasons ("disallowed_useragent"). No client-side fix exists for this —
+    // the user must open the link in a real browser.
+    function isInAppBrowser() {
+      const ua = navigator.userAgent || '';
+      return /FBAN|FBAV|Instagram|Line\/|WhatsApp|MicroMessenger|Messenger|TikTok|; wv\)/i.test(ua);
+    }
+    if (isInAppBrowser()) {
+      document.getElementById('webview-warning').classList.remove('hidden');
+    }
 
     const errorEl = document.getElementById('error-msg');
     const successEl = document.getElementById('success-msg');
@@ -239,10 +269,37 @@
     document.getElementById('google-btn').addEventListener('click', async () => {
       if (!auth) return;
       errorEl.classList.add('hidden');
+      if (isInAppBrowser()) {
+        showError("Google bloque la connexion dans ce navigateur intégré. Ouvrez cette page dans Chrome/Safari, ou utilisez l'email et le mot de passe ci-dessous.");
+        return;
+      }
       try {
         await signInWithRedirect(auth, provider);
       } catch(err) {
+        console.error('[JLAuth] signInWithRedirect error:', err);
         showError('Erreur lors de la connexion Google. Réessayez.');
+      }
+    });
+
+    // Forgot / not-yet-set password — sends a Firebase reset email. This also
+    // lets an admin who only ever used "Connexion avec Google" add a working
+    // email/password credential to their existing account.
+    document.getElementById('forgot-pw-btn').addEventListener('click', async () => {
+      if (!auth) return;
+      const email = (document.getElementById('email').value || '').trim();
+      if (!email) {
+        showError('Entrez votre email ci-dessus, puis cliquez à nouveau sur ce lien.');
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showSuccess('Email envoyé ! Consultez votre boîte de réception (et les spams) pour définir votre mot de passe.');
+      } catch (err) {
+        if (err.code === 'auth/user-not-found') {
+          showError("Aucun compte n'existe avec cet email.");
+        } else {
+          showError("Impossible d'envoyer l'email de réinitialisation. Réessayez.");
+        }
       }
     });
 
