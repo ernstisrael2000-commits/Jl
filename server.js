@@ -294,6 +294,31 @@ const server = http.createServer((req, res) => {
   });
 });
 
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(
+      `Le port ${PORT} est déjà utilisé par un autre processus (probablement une ancienne instance du serveur encore en cours d'arrêt). Réessai dans 1 seconde...`
+    );
+    setTimeout(() => {
+      server.close();
+      server.listen(PORT, "0.0.0.0");
+    }, 1000);
+  } else {
+    console.error("Erreur du serveur:", err);
+    process.exit(1);
+  }
+});
+
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`JL & Co design site running on port ${PORT}`);
 });
+
+// Arrêt propre : libère le port immédiatement quand le workflow redémarre,
+// pour éviter les erreurs EADDRINUSE au prochain démarrage.
+function shutdown() {
+  server.close(() => process.exit(0));
+  // Filet de sécurité si close() traîne (connexions ouvertes)
+  setTimeout(() => process.exit(0), 3000).unref();
+}
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
