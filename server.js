@@ -118,7 +118,6 @@ const FIREBASE_CONFIG = {
 const ADMIN_EMAILS = [
   "neopayservices509@gmail.com",
   "venelsonliberus11@gmail.com",
-  "jlco.test.admin.screenshot@example.com",
 ];
 
 // ── Data helpers ────────────────────────────────────────────────────────────

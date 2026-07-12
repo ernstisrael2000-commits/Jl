@@ -125,58 +125,19 @@
     }
   }
 
-  /* ─── Homepage portal view ──────────────────────────────────────────────── */
-  function updateHomepage(user) {
-    var hero   = document.getElementById('hero-section');
-    var portal = document.getElementById('portal-section');
-    if (!hero && !portal) return; // not homepage
-
-    var stats = document.getElementById('hero-stats');
-    if (user) {
-      if (hero)   hero.style.display   = 'none';
-      if (stats)  stats.style.display  = 'none';
-      if (portal) {
-        portal.style.display = '';
-        var nameEl = document.getElementById('portal-username');
-        if (nameEl) nameEl.textContent = displayName(user);
-        var adminLink = document.getElementById('portal-admin-link');
-        if (adminLink) adminLink.style.display = isAdmin(user) ? '' : 'none';
-      }
-    } else {
-      if (hero)   hero.style.display   = '';
-      if (stats)  stats.style.display  = '';
-      if (portal) portal.style.display = 'none';
-    }
-  }
+  /* ─── Homepage ──────────────────────────────────────────────────────────── */
+  // The homepage is the same marketing page for every visitor, logged in or
+  // not — the site is multipage by design, so login only changes the nav
+  // (account button, admin link), never which page/section is shown.
+  function updateHomepage(user) { /* intentionally a no-op */ }
 
   /* ─── Auth guards ───────────────────────────────────────────────────────── */
-  function guardLink(el) {
-    if (!el) return;
-    el.addEventListener('click', function (e) {
-      if (!_currentUser) {
-        e.preventDefault();
-        e.stopPropagation();
-        var href = el.getAttribute('href') || window.location.href;
-        window.location.href = '/login.html?next=' + encodeURIComponent(href);
-      }
-    });
-  }
-
   function setupGuards() {
-    // Links that require auth
-    ['hero-devis-btn','cta-devis-footer','hero-shop-btn','cta-shop-footer',
-     'cta-services-footer-quote'].forEach(function(id){ guardLink(document.getElementById(id)); });
-
-    // Add-to-cart buttons (capture phase, runs before existing handler)
-    document.querySelectorAll('[id^="add-to-cart-"]').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        if (!_currentUser) {
-          e.preventDefault();
-          e.stopPropagation();
-          window.location.href = '/login.html?next=' + encodeURIComponent(window.location.href);
-        }
-      }, true);
-    });
+    // Browsing (viewing the shop, requesting a quote, reading services…) is
+    // always open to everyone — a login wall on simple navigation links
+    // breaks the site's multipage browsing experience. Only real account
+    // actions (checkout) require a session; see the panier/paiement guard
+    // below.
 
     // Panier / paiement pages — guard on load once auth resolves
     var page = window.location.pathname;
