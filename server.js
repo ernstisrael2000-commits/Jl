@@ -120,6 +120,17 @@ const ADMIN_EMAILS = [
   "venelsonliberus11@gmail.com",
 ];
 
+// ── Pay'm Plop plop (mobile money marchand : MonCash, NatCash, Kashpaw) ─────
+// Le client_id marchand est un secret serveur — jamais exposé au navigateur.
+// Doc : https://plopplop.solutionip.app/paiement-doc
+const PLOPPLOP_BASE_URL = "https://plopplop.solutionip.app";
+const PLOPPLOP_CLIENT_ID = process.env.PLOPPLOP_CLIENT_ID || "";
+if (!PLOPPLOP_CLIENT_ID) {
+  console.warn(
+    "[Plop plop] PLOPPLOP_CLIENT_ID absent — le moyen de paiement Pay'm Plop plop est désactivé."
+  );
+}
+
 // ── Data helpers ────────────────────────────────────────────────────────────
 function readData(name) {
   const file = path.join(DATA_DIR, `${name}.json`);
