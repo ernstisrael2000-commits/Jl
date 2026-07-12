@@ -53,6 +53,8 @@
     if (!container) {
       container = document.createElement('div');
       container.id = '_jl_auth_desktop';
+      // Only visible alongside the desktop nav (lg and up)
+      container.className = 'hidden lg:flex items-center';
       waBtn.parentNode.insertBefore(container, waBtn);
     }
 
@@ -133,8 +135,10 @@
     var portal = document.getElementById('portal-section');
     if (!hero && !portal) return; // not homepage
 
+    var stats = document.getElementById('hero-stats');
     if (user) {
       if (hero)   hero.style.display   = 'none';
+      if (stats)  stats.style.display  = 'none';
       if (portal) {
         portal.style.display = '';
         var nameEl = document.getElementById('portal-username');
@@ -144,6 +148,7 @@
       }
     } else {
       if (hero)   hero.style.display   = '';
+      if (stats)  stats.style.display  = '';
       if (portal) portal.style.display = 'none';
     }
   }
