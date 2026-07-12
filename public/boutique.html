@@ -107,9 +107,13 @@
       Devis
     </a>
   </nav>
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-3">
     <a href="apropos.html" class="hidden lg:block font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity px-2">À propos</a>
     <a href="contact.html" class="hidden lg:block font-label-bold text-label-bold text-on-surface-variant hover:opacity-80 transition-opacity px-2">Contact</a>
+    <!-- Populated by auth.js: shows "Connexion" when logged out, or the
+         account menu (+ Admin link) when logged in — same behaviour as
+         every other page on the site. -->
+    <div id="nav-account-slot" class="hidden md:flex items-center"></div>
     <a href="panier.html" id="cart-btn" class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-150 relative" aria-label="Panier">
       <span class="material-symbols-outlined">shopping_cart</span>
       <span id="cart-count" class="hidden absolute -top-1 -right-1 bg-secondary text-on-secondary rounded-full w-4 h-4 flex items-center justify-center font-label-bold text-[10px]">0</span>
@@ -215,9 +219,9 @@
     <span class="material-symbols-outlined mb-1 text-[24px]">request_quote</span>
     <span class="font-label-bold text-label-bold">Devis</span>
   </a>
-  <a href="/dashboard.html" class="bottom-nav-item flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:bg-surface-container-high transition-colors active:scale-90 duration-200 rounded-full px-4 py-1">
-    <span class="material-symbols-outlined mb-1 text-[24px]">person</span>
-    <span class="font-label-bold text-label-bold">Profil</span>
+  <a href="/login.html?next=%2Fboutique.html" id="bottom-nav-profile" class="bottom-nav-item flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:bg-surface-container-high transition-colors active:scale-90 duration-200 rounded-full px-4 py-1">
+    <span id="bottom-nav-profile-icon" class="material-symbols-outlined mb-1 text-[24px]">person</span>
+    <span id="bottom-nav-profile-label" class="font-label-bold text-label-bold">Compte</span>
   </a>
 </nav>
 
@@ -426,6 +430,31 @@
       btn.addEventListener('click', function () { toggleFav(btn.dataset.id); });
     });
   }
+
+  // ── Bottom-nav "Compte" item reflects real login state ─────────────────
+  // Mirrors the account menu injected by auth.js elsewhere on the site:
+  // logged out -> login page; logged in admin -> dashboard; logged in
+  // customer -> their quote requests (closest thing to an account page).
+  function updateBottomNavProfile(user) {
+    var link = document.getElementById('bottom-nav-profile');
+    var icon = document.getElementById('bottom-nav-profile-icon');
+    var label = document.getElementById('bottom-nav-profile-label');
+    if (!link) return;
+    if (user && user.isAdmin) {
+      link.href = '/dashboard.html';
+      label.textContent = 'Admin';
+      icon.style.setProperty('font-variation-settings', "'FILL' 1");
+    } else if (user) {
+      link.href = '/devis.html';
+      label.textContent = 'Compte';
+      icon.style.setProperty('font-variation-settings', "'FILL' 1");
+    } else {
+      link.href = '/login.html?next=' + encodeURIComponent(window.location.pathname);
+      label.textContent = 'Compte';
+      icon.style.removeProperty('font-variation-settings');
+    }
+  }
+  document.addEventListener('jlauth:ready', function (e) { updateBottomNavProfile(e.detail && e.detail.user); });
 
   fetch('/api/produits')
     .then(function (r) { return r.json(); })

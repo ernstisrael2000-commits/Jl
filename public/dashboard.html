@@ -33,18 +33,6 @@
 </head>
 <body class="min-h-screen bg-slate-50 flex overflow-hidden">
 
-  <!-- Auth loading overlay -->
-  <div id="auth-loading" class="fixed inset-0 bg-white z-[200] flex items-center justify-center">
-    <div class="text-center">
-      <div class="w-16 h-16 bg-jl-dark rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-        <iconify-icon icon="lucide:zap" class="text-jl-yellow text-3xl animate-spin"></iconify-icon>
-      </div>
-      <p class="text-slate-400 mt-4 text-sm">Vérification de l'accès...</p>
-      <a id="auth-fallback-link" href="/login.html" style="display:none" class="mt-4 inline-block px-5 py-2 bg-jl-dark text-jl-yellow font-bold rounded-full text-sm hover:bg-yellow-400 hover:text-jl-dark transition-all">← Aller à la connexion</a>
-      <p class="text-slate-500 font-medium">Vérification de l'accès…</p>
-    </div>
-  </div>
-
   <!-- ── SIDEBAR ──────────────────────────────────────────────────────────── -->
   <aside class="w-64 bg-jl-dark text-white flex-shrink-0 flex flex-col z-50 shadow-2xl">
     <div class="h-20 flex items-center px-6 border-b border-white/10">
@@ -374,25 +362,7 @@
   </div>
 
   <!-- ══ SCRIPTS ──────────────────────────────────────────────────────────── -->
-  <!-- Fallback: runs even if Firebase CDN fails to load -->
-  <script>
-    (function() {
-      // Show a login link after 6 seconds
-      var linkTimer = setTimeout(function() {
-        var el = document.getElementById('auth-fallback-link');
-        if (el) el.style.display = '';
-      }, 6000);
-      // Hard redirect after 14 seconds
-      window._dashHardTimeout = setTimeout(function() {
-        window.location.href = '/login.html?retry=1';
-      }, 14000);
-      window._clearDashTimeouts = function() {
-        clearTimeout(linkTimer);
-        clearTimeout(window._dashHardTimeout);
-      };
-    })();
-  </script>
-    <script type="module">
+  <script type="module">
     import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
@@ -813,32 +783,21 @@
     });
 
     // ── Accès admin ──────────────────────────────────────────────────────
-    // This page is now gated server-side (server.js redirects non-admins to
-    // /login.html before the HTML is even served), so by the time this script
-    // runs we know we have a valid, admin-verified session cookie. We still
-    // call /api/whoami defensively (e.g. if the session expired mid-visit)
-    // and to populate the sidebar with the admin's real email.
-    try {
-      const who = await fetch('/api/whoami', { credentials: 'include' }).then(r => r.ok ? r.json() : null);
-      if (window._clearDashTimeouts) window._clearDashTimeouts();
-      $('auth-loading').classList.add('hidden');
-
-      if (!who || !who.email) {
-        window.location.href = '/login.html?next=%2Fdashboard.html';
-        return;
-      }
-
-      const initials = who.email.slice(0, 2).toUpperCase();
-      $('user-avatar').textContent = initials;
-      $('user-name').textContent = 'Administrateur';
-      $('user-email').textContent = who.email;
-      loadDash();
-    } catch (e) {
-      if (window._clearDashTimeouts) window._clearDashTimeouts();
-      $('auth-loading').classList.add('hidden');
-      window.location.href = '/login.html?next=%2Fdashboard.html';
-      return;
-    }
+    // This page is gated server-side: server.js verifies the admin session
+    // cookie and redirects non-admins to /login.html *before* this HTML is
+    // even sent to the browser. So there is nothing to "load" or block on
+    // here — we just fetch /api/whoami once to show the admin's real email
+    // in the sidebar, without ever gating the UI behind it.
+    loadDash();
+    fetch('/api/whoami', { credentials: 'include' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(who => {
+        if (!who || !who.email) return;
+        $('user-avatar').textContent = who.email.slice(0, 2).toUpperCase();
+        $('user-name').textContent = 'Administrateur';
+        $('user-email').textContent = who.email;
+      })
+      .catch(() => {});
 
     // ── Déconnexion ──────────────────────────────────────────────────────
     // Clears both the server session cookie and the client Firebase session.

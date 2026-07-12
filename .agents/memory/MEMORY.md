@@ -1,2 +1,3 @@
 - [Firebase auth reliability](firebase-auth-session-architecture.md) — client-only Firebase auth (onAuthStateChanged, popups) is unreliable across mobile/webviews; use server-verified httpOnly session cookies as the single source of truth instead.
 - [In-app browser OAuth block](google-oauth-inapp-browser-block.md) — Google refuses OAuth sign-in inside embedded webviews (WhatsApp/Instagram/etc); no client fix exists, detect and redirect users to a real browser or an alternate login method.
+- [JL & Co auth loading / nav gotchas](jlco-auth-nav-gotchas.md) — redundant client-side gating on server-gated pages can hang forever; custom page headers need a `#nav-account-slot` anchor or auth.js silently skips the account button.

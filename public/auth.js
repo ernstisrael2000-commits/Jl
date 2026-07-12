@@ -32,16 +32,26 @@
 
   /* ─── Nav — desktop ────────────────────────────────────────────────────── */
   function updateDesktopNav(user) {
+    // Pages can opt in to a dedicated slot (id="nav-account-slot") when their
+    // header doesn't have a WhatsApp button to anchor on (e.g. boutique.html's
+    // own header design). Falls back to inserting before #nav-whatsapp on the
+    // pages that share the standard site header.
+    var slot = document.getElementById('nav-account-slot');
     var waBtn = document.getElementById('nav-whatsapp');
-    if (!waBtn) return;
+    if (!slot && !waBtn) return;
 
     var container = document.getElementById('_jl_auth_desktop');
     if (!container) {
       container = document.createElement('div');
       container.id = '_jl_auth_desktop';
-      // Only visible alongside the desktop nav (lg and up)
-      container.className = 'hidden lg:flex items-center';
-      waBtn.parentNode.insertBefore(container, waBtn);
+      if (slot) {
+        // The slot's own classes control visibility/layout for that page.
+        slot.appendChild(container);
+      } else {
+        // Only visible alongside the desktop nav (lg and up)
+        container.className = 'hidden lg:flex items-center';
+        waBtn.parentNode.insertBefore(container, waBtn);
+      }
     }
 
     if (user) {
