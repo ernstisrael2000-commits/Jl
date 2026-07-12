@@ -1,12 +1,93 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
+const admin = require("firebase-admin");
 
 const PORT = process.env.PORT || 5000;
 const ROOT = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+
+// ── Firebase Admin SDK (service account) ────────────────────────────────────
+// Used for server-side verification of admin sessions (the client Firebase
+// SDK is only used for sign-in; the server never trusts the client's opinion
+// of who is an admin).
+let firebaseAdminApp = null;
+try {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY || "";
+  if (raw.trim()) {
+    const serviceAccount = JSON.parse(raw);
+    firebaseAdminApp = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    console.log("[Firebase Admin] Initialisé avec le compte de service.");
+  } else {
+    console.warn(
+      "[Firebase Admin] FIREBASE_SERVICE_ACCOUNT_KEY absent — les sessions admin sécurisées sont désactivées."
+    );
+  }
+} catch (e) {
+  console.error("[Firebase Admin] Échec d'initialisation:", e.message);
+}
+
+const SESSION_COOKIE_NAME = "jl_admin_session";
+const SESSION_MAX_AGE_MS = 5 * 24 * 60 * 60 * 1000; // 5 jours
+
+function parseCookies(req) {
+  const header = req.headers.cookie || "";
+  const out = {};
+  header.split(";").forEach((pair) => {
+    const idx = pair.indexOf("=");
+    if (idx === -1) return;
+    const key = pair.slice(0, idx).trim();
+    const val = pair.slice(idx + 1).trim();
+    if (key) out[key] = decodeURIComponent(val);
+  });
+  return out;
+}
+
+function setSessionCookie(res, value, maxAgeMs) {
+  const parts = [
+    `${SESSION_COOKIE_NAME}=${encodeURIComponent(value)}`,
+    "Path=/",
+    "HttpOnly",
+    "SameSite=Lax",
+    `Max-Age=${Math.floor(maxAgeMs / 1000)}`,
+  ];
+  if (process.env.REPLIT_DEPLOYMENT || process.env.NODE_ENV === "production") {
+    parts.push("Secure");
+  }
+  res.setHeader("Set-Cookie", parts.join("; "));
+}
+
+function clearSessionCookie(res) {
+  res.setHeader(
+    "Set-Cookie",
+    `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`
+  );
+}
+
+// Verifies the session cookie against Firebase Admin and checks the email is
+// in ADMIN_EMAILS. Returns the decoded token or null.
+async function getAdminSession(req) {
+  if (!firebaseAdminApp) return null;
+  const cookies = parseCookies(req);
+  const sessionCookie = cookies[SESSION_COOKIE_NAME];
+  if (!sessionCookie) return null;
+  try {
+    const decoded = await admin
+      .auth()
+      .verifySessionCookie(sessionCookie, true /* checkRevoked */);
+    if (!ADMIN_EMAILS.map((e) => e.toLowerCase()).includes((decoded.email || "").toLowerCase())) {
+      return null;
+    }
+    return decoded;
+  } catch {
+    return null;
+  }
+}
 
 // ── Firebase config (from env vars) ────────────────────────────────────────
 // Guard: FIREBASE_API_KEY must be the short web API key (AIzaSy…), NOT a
@@ -94,13 +175,59 @@ async function handleAPI(req, res, urlPath) {
       firebase: FIREBASE_CONFIG,
       adminEmails: ADMIN_EMAILS,
       configured: !!FIREBASE_CONFIG.apiKey,
+      adminSessionsEnabled: !!firebaseAdminApp,
     });
   }
 
+  // POST /api/session — exchange a Firebase ID token for a secure, httpOnly
+  // admin session cookie. Verified server-side via the Firebase Admin SDK,
+  // so the client can never fake admin access.
+  if (urlPath === "/api/session" && method === "POST") {
+    if (!firebaseAdminApp) {
+      return jsonRes(res, 503, {
+        error: "Compte de service Firebase non configuré sur le serveur.",
+      });
+    }
+    const body = await parseBody(req);
+    if (!body.idToken) return jsonRes(res, 400, { error: "idToken manquant" });
+    try {
+      const decoded = await admin.auth().verifyIdToken(body.idToken);
+      const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(
+        (decoded.email || "").toLowerCase()
+      );
+      if (!isAdmin) {
+        return jsonRes(res, 403, { error: "not_admin", isAdmin: false });
+      }
+      const sessionCookie = await admin
+        .auth()
+        .createSessionCookie(body.idToken, { expiresIn: SESSION_MAX_AGE_MS });
+      setSessionCookie(res, sessionCookie, SESSION_MAX_AGE_MS);
+      return jsonRes(res, 200, { ok: true, isAdmin: true, email: decoded.email });
+    } catch (e) {
+      return jsonRes(res, 401, { error: "Jeton invalide ou expiré." });
+    }
+  }
+
+  // GET /api/whoami — current admin session, if any
+  if (urlPath === "/api/whoami" && method === "GET") {
+    const session = await getAdminSession(req);
+    if (!session) return jsonRes(res, 401, { error: "not_authenticated" });
+    return jsonRes(res, 200, { email: session.email, isAdmin: true });
+  }
+
+  // POST /api/logout — clear the admin session cookie
+  if (urlPath === "/api/logout" && method === "POST") {
+    clearSessionCookie(res);
+    return jsonRes(res, 200, { ok: true });
+  }
+
   // ── /api/produits ──────────────────────────────────────────────────────
+  // Reading the catalog is public (boutique page); creating/editing/deleting
+  // products requires a verified admin session.
   if (urlPath === "/api/produits") {
     if (method === "GET") return jsonRes(res, 200, readData("produits"));
     if (method === "POST") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
       const body = await parseBody(req);
       const items = readData("produits");
       const item = {
@@ -117,6 +244,9 @@ async function handleAPI(req, res, urlPath) {
   const produitMatch = urlPath.match(/^\/api\/produits\/([^/]+)$/);
   if (produitMatch) {
     const id = produitMatch[1];
+    if (method === "PUT" || method === "DELETE") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+    }
     if (method === "PUT") {
       const body = await parseBody(req);
       let items = readData("produits");
@@ -133,8 +263,13 @@ async function handleAPI(req, res, urlPath) {
   }
 
   // ── /api/commandes ─────────────────────────────────────────────────────
+  // Listing all orders is admin-only (customer data); creating an order from
+  // checkout stays public.
   if (urlPath === "/api/commandes") {
-    if (method === "GET") return jsonRes(res, 200, readData("commandes"));
+    if (method === "GET") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+      return jsonRes(res, 200, readData("commandes"));
+    }
     if (method === "POST") {
       const body = await parseBody(req);
       const items = readData("commandes");
@@ -153,6 +288,9 @@ async function handleAPI(req, res, urlPath) {
   const commandeMatch = urlPath.match(/^\/api\/commandes\/([^/]+)$/);
   if (commandeMatch) {
     const id = commandeMatch[1];
+    if (method === "PUT" || method === "DELETE") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+    }
     if (method === "PUT") {
       const body = await parseBody(req);
       let items = readData("commandes");
@@ -169,8 +307,13 @@ async function handleAPI(req, res, urlPath) {
   }
 
   // ── /api/devis ─────────────────────────────────────────────────────────
+  // Listing quote requests is admin-only; submitting a new request from the
+  // public devis form stays open.
   if (urlPath === "/api/devis") {
-    if (method === "GET") return jsonRes(res, 200, readData("devis"));
+    if (method === "GET") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+      return jsonRes(res, 200, readData("devis"));
+    }
     if (method === "POST") {
       const body = await parseBody(req);
       const items = readData("devis");
@@ -190,6 +333,9 @@ async function handleAPI(req, res, urlPath) {
   const devisMatch = urlPath.match(/^\/api\/devis\/([^/]+)$/);
   if (devisMatch) {
     const id = devisMatch[1];
+    if (method === "PUT" || method === "DELETE") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+    }
     if (method === "PUT") {
       const body = await parseBody(req);
       let items = readData("devis");
@@ -206,8 +352,13 @@ async function handleAPI(req, res, urlPath) {
   }
 
   // ── /api/contacts ──────────────────────────────────────────────────────
+  // Listing contact messages is admin-only; submitting the public contact
+  // form stays open.
   if (urlPath === "/api/contacts") {
-    if (method === "GET") return jsonRes(res, 200, readData("contacts"));
+    if (method === "GET") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+      return jsonRes(res, 200, readData("contacts"));
+    }
     if (method === "POST") {
       const body = await parseBody(req);
       const items = readData("contacts");
@@ -226,6 +377,9 @@ async function handleAPI(req, res, urlPath) {
   const contactMatch = urlPath.match(/^\/api\/contacts\/([^/]+)$/);
   if (contactMatch) {
     const id = contactMatch[1];
+    if (method === "PUT" || method === "DELETE") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+    }
     if (method === "PUT") {
       const body = await parseBody(req);
       let items = readData("contacts");
@@ -263,6 +417,29 @@ const server = http.createServer((req, res) => {
   if (urlPath.startsWith("/api/")) {
     handleAPI(req, res, urlPath).catch((err) => {
       jsonRes(res, 500, { error: err.message });
+    });
+    return;
+  }
+
+  // Server-side gate: dashboard.html is only ever served to a verified admin
+  // session. This removes the old client-only check, which could hang or be
+  // bypassed and left admins stuck on a "Vérification de l'accès" screen.
+  if (urlPath === "/dashboard.html") {
+    getAdminSession(req).then((session) => {
+      if (!session) {
+        res.writeHead(302, { Location: "/login.html?next=%2Fdashboard.html" });
+        res.end();
+        return;
+      }
+      fs.readFile(path.join(ROOT, "dashboard.html"), (err, data) => {
+        if (err) {
+          res.writeHead(500);
+          res.end("Erreur serveur");
+          return;
+        }
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+        res.end(data);
+      });
     });
     return;
   }

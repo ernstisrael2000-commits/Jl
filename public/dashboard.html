@@ -394,7 +394,7 @@
   </script>
     <script type="module">
     import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
     // ── Helpers ─────────────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
@@ -812,55 +812,50 @@
       modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
     });
 
-    // ── Firebase Auth ─────────────────────────────────────────────────────
+    // ── Accès admin ──────────────────────────────────────────────────────
+    // This page is now gated server-side (server.js redirects non-admins to
+    // /login.html before the HTML is even served), so by the time this script
+    // runs we know we have a valid, admin-verified session cookie. We still
+    // call /api/whoami defensively (e.g. if the session expired mid-visit)
+    // and to populate the sidebar with the admin's real email.
     try {
-      const cfg = await fetch('/api/config').then(r => r.json());
-      const adminEmails = (cfg.adminEmails || []).map(e => e.toLowerCase());
+      const who = await fetch('/api/whoami', { credentials: 'include' }).then(r => r.ok ? r.json() : null);
+      if (window._clearDashTimeouts) window._clearDashTimeouts();
+      $('auth-loading').classList.add('hidden');
 
-      if (!cfg.configured || !cfg.firebase.apiKey) {
-        // No Firebase → show dashboard without auth (dev mode)
-        if (window._clearDashTimeouts) window._clearDashTimeouts();
-        $('auth-loading').classList.add('hidden');
-        $('user-email').textContent = 'Mode dev (sans auth)';
-        loadDash();
+      if (!who || !who.email) {
+        window.location.href = '/login.html?next=%2Fdashboard.html';
         return;
       }
 
-      const app = getApps().length === 0 ? initializeApp(cfg.firebase) : getApp();
-      const auth = getAuth(app);
-
-      // Safety: if Firebase doesn't resolve within 10 s, bounce to login
-      const authTimeout = setTimeout(() => {
-        window.location.href = '/login.html?error=timeout';
-      }, 10000);
-
-      onAuthStateChanged(auth, user => {
-        clearTimeout(authTimeout);
-        if (window._clearDashTimeouts) window._clearDashTimeouts();
-        $('auth-loading').classList.add('hidden');
-        if (!user || !adminEmails.includes(user.email.toLowerCase())) {
-          window.location.href = '/login.html';
-          return;
-        }
-        // Update UI
-        const initials = user.displayName ? user.displayName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : user.email.slice(0,2).toUpperCase();
-        $('user-avatar').textContent = initials;
-        $('user-name').textContent = user.displayName || 'Administrateur';
-        $('user-email').textContent = user.email;
-        loadDash();
-      });
-
-      $('logout-btn').addEventListener('click', async () => {
-        if (!confirm('Se déconnecter ?')) return;
-        await signOut(auth);
-        window.location.href = '/login.html';
-      });
-
-    } catch(e) {
+      const initials = who.email.slice(0, 2).toUpperCase();
+      $('user-avatar').textContent = initials;
+      $('user-name').textContent = 'Administrateur';
+      $('user-email').textContent = who.email;
+      loadDash();
+    } catch (e) {
       if (window._clearDashTimeouts) window._clearDashTimeouts();
       $('auth-loading').classList.add('hidden');
-      loadDash();
+      window.location.href = '/login.html?next=%2Fdashboard.html';
+      return;
     }
+
+    // ── Déconnexion ──────────────────────────────────────────────────────
+    // Clears both the server session cookie and the client Firebase session.
+    $('logout-btn').addEventListener('click', async () => {
+      if (!confirm('Se déconnecter ?')) return;
+      try {
+        await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+      } catch (e) {}
+      try {
+        const cfg = await fetch('/api/config').then(r => r.json());
+        if (cfg.configured && cfg.firebase.apiKey) {
+          const app = getApps().length === 0 ? initializeApp(cfg.firebase) : getApp();
+          await signOut(getAuth(app));
+        }
+      } catch (e) {}
+      window.location.href = '/login.html';
+    });
   </script>
 </body>
 </html>

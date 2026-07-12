@@ -45,10 +45,12 @@ Le résultat est écrit dans `public/`.
 - D'autres pages (boutique, à propos, services) référencent encore des images manquantes (`product-*.jpg`, `team-photo.jpg`, `services-header.jpg`) — non traité, car hors du périmètre demandé (page d'accueil uniquement).
 
 ## Authentification (Firebase)
-- Le site utilise Firebase Authentication (Google + Email/Mot de passe), configuré via les secrets Replit `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`.
-- Le serveur expose la config publique (clé API web, non sensible) via `GET /api/config`.
-- Les comptes admin (accès `dashboard.html`) sont définis en dur dans `server.js` (`ADMIN_EMAILS`) — tout autre compte est un client normal.
-- Dans la console Firebase du projet, les fournisseurs **Google** et **Email/Mot de passe** doivent être activés sous Authentication → Sign-in method (à vérifier côté utilisateur si la connexion échoue).
+- Connexion client (tous les utilisateurs) : Firebase Authentication (Google via `signInWithRedirect` — pas de popup, peu fiable sur mobile — + Email/Mot de passe), configuré via les secrets `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`. Le serveur expose cette config publique (clé API web, non sensible) via `GET /api/config`.
+- Accès admin (dashboard) : **vérifié côté serveur** avec le Firebase Admin SDK (secret `FIREBASE_SERVICE_ACCOUNT_KEY`, JSON du compte de service). Après connexion, le client échange son ID token Firebase contre un cookie de session `httpOnly` (`POST /api/session`), que `server.js` seul peut créer/valider — le client ne décide jamais lui-même qu'il est admin.
+- `GET /dashboard.html` est bloqué au niveau serveur : sans session admin valide, redirection 302 vers `/login.html` avant même d'envoyer le HTML.
+- Les endpoints qui exposent des données clients (`GET /api/commandes`, `/api/devis`, `/api/contacts`) et les mutations (`POST/PUT/DELETE` sur produits, commandes, devis, contacts) exigent la même session admin. Les endpoints publics (catalogue, soumission de devis/contact/commande) restent ouverts.
+- Les comptes admin sont définis en dur dans `server.js` (`ADMIN_EMAILS`) — tout autre compte est un client normal.
+- Dans la console Firebase du projet, les fournisseurs **Google** et **Email/Mot de passe** doivent être activés sous Authentication → Sign-in method.
 
 ## À personnaliser avant mise en production
 - Numéro WhatsApp/téléphone réel (actuellement un placeholder dans `tools/wire-links.js`)

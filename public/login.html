@@ -161,10 +161,11 @@
     });
 
     // Fetch config from server
-    let auth, provider, adminEmails = [];
+    let auth, provider, adminEmails = [], adminSessionsEnabled = false;
     try {
       const cfg = await fetch('/api/config').then(r => r.json());
       adminEmails = cfg.adminEmails || [];
+      adminSessionsEnabled = !!cfg.adminSessionsEnabled;
 
       if (!cfg.configured || !cfg.firebase.apiKey) {
         configWarn.classList.remove('hidden');
@@ -180,7 +181,7 @@
         try {
           const redirectCred = await getRedirectResult(auth);
           if (redirectCred && redirectCred.user) {
-            redirectAfterLogin(redirectCred.user);
+            await redirectAfterLogin(redirectCred.user);
           }
         } catch (redirectErr) {
           showError('Erreur lors de la connexion Google. Réessayez.');
@@ -188,26 +189,46 @@
 
         // Already logged in?
         onAuthStateChanged(auth, user => {
-          if (user) {
-            showSuccess('Connexion réussie ! Redirection...');
-            const dest = adminEmails.map(e=>e.toLowerCase()).includes(user.email.toLowerCase())
-              ? '/dashboard.html'
-              : (new URLSearchParams(window.location.search).get('next') || '/');
-            setTimeout(() => window.location.href = dest, 600);
-          }
+          if (user) redirectAfterLogin(user);
         });
       }
     } catch(e) {
       showError('Impossible de contacter le serveur.');
     }
 
-    // Helper: redirect after login based on role
-    function redirectAfterLogin(user) {
+    // Helper: exchange the Firebase ID token for a secure server-verified
+    // admin session (httpOnly cookie) before redirecting into the dashboard.
+    // This is what actually decides admin access now — never the client.
+    async function redirectAfterLogin(user) {
       const next = new URLSearchParams(window.location.search).get('next') || '/';
-      const dest = adminEmails.map(e=>e.toLowerCase()).includes(user.email.toLowerCase())
-        ? '/dashboard.html' : next;
-      showSuccess('Connexion réussie ! Redirection...');
-      setTimeout(() => window.location.href = dest, 600);
+      const looksLikeAdmin = adminEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
+
+      if (!looksLikeAdmin || !adminSessionsEnabled) {
+        showSuccess('Connexion réussie ! Redirection...');
+        setTimeout(() => window.location.href = next, 600);
+        return;
+      }
+
+      try {
+        const idToken = await user.getIdToken(true);
+        const resp = await fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ idToken }),
+        });
+        const data = await resp.json();
+        if (resp.ok && data.isAdmin) {
+          showSuccess('Connexion réussie ! Redirection...');
+          setTimeout(() => window.location.href = '/dashboard.html', 600);
+        } else {
+          // Not recognized as admin server-side — send to the normal destination
+          showSuccess('Connexion réussie ! Redirection...');
+          setTimeout(() => window.location.href = next, 600);
+        }
+      } catch (e) {
+        showError('Impossible de créer la session sécurisée. Réessayez.');
+      }
     }
 
     // Google sign-in (open to all users) — uses a full-page redirect instead of a
