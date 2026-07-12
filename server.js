@@ -204,7 +204,8 @@ async function handleAPI(req, res, urlPath) {
       setSessionCookie(res, sessionCookie, SESSION_MAX_AGE_MS);
       return jsonRes(res, 200, { ok: true, isAdmin: true, email: decoded.email });
     } catch (e) {
-      return jsonRes(res, 401, { error: "Jeton invalide ou expiré." });
+      console.error("[POST /api/session] Échec:", e.code || "", e.message);
+      return jsonRes(res, 401, { error: "Jeton invalide ou expiré.", detail: e.message });
     }
   }
 

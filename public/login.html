@@ -222,11 +222,13 @@
           showSuccess('Connexion réussie ! Redirection...');
           setTimeout(() => window.location.href = '/dashboard.html', 600);
         } else {
+          console.warn('[JLAuth] /api/session a refusé la session admin:', resp.status, data);
           // Not recognized as admin server-side — send to the normal destination
           showSuccess('Connexion réussie ! Redirection...');
           setTimeout(() => window.location.href = next, 600);
         }
       } catch (e) {
+        console.error('[JLAuth] Échec de /api/session:', e);
         showError('Impossible de créer la session sécurisée. Réessayez.');
       }
     }
