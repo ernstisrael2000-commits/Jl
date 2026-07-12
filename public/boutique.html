@@ -1,53 +1,502 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Boutique JL & Co | Équipements Énergétiques</title><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script><script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script><link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet"><style>body{font-family:'Satoshi',sans-serif}h1,h2,h3,h4{font-family:'Clash Grotesk',sans-serif}.bg-jl-dark{background-color:#1a3a52}.text-jl-yellow{color:#FFD700}.bg-jl-yellow{background-color:#FFD700}.border-jl-yellow{border-color:#FFD700}::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#1a3a52}::-webkit-scrollbar-thumb{background:#FFD700;border-radius:10px}</style>  <style>sd-component { display: block; }</style>
-  </head><body><div class="min-h-screen bg-slate-50 flex flex-col"><!-- component: NavigationHeader (bd8156bc-ca96-4d42-b0b5-e2c280f904e2) -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique | JL & Co Solutions Énergétiques</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{"jl-dark":"#1a3a52","jl-yellow":"#FFD700"}}}}</script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Satoshi', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Clash Grotesk', sans-serif; }
+    .bg-jl-dark  { background-color: #1a3a52; }
+    .text-jl-yellow { color: #FFD700; }
+    .bg-jl-yellow   { background-color: #FFD700; }
+    .border-jl-yellow { border-color: #FFD700; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #1a3a52; border-radius: 10px; }
+
+    /* Cart drawer */
+    #cart-drawer { transition: transform .35s cubic-bezier(.4,0,.2,1); }
+    #cart-drawer.open { transform: translateX(0); }
+    #cart-overlay { transition: opacity .3s ease; }
+    #cart-overlay.open { opacity: 1; pointer-events: auto; }
+
+    /* Category pill active */
+    .cat-pill.active {
+      background-color: #1a3a52;
+      color: #FFD700;
+      border-color: #1a3a52;
+    }
+    /* Product card hover */
+    .product-card { transition: box-shadow .25s, transform .25s; }
+    .product-card:hover { box-shadow: 0 20px 60px rgba(26,58,82,.12); transform: translateY(-4px); }
+
+    /* Toast */
+    #toast-cart { transition: opacity .3s, transform .3s; }
+  </style>
+</head>
+<body class="bg-slate-50">
+
+<!-- ══════════════════ NAV ══════════════════ -->
 <div>
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200"><div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between"><a href="index.html" id="nav-logo" class="flex items-center gap-2 group"><div class="w-10 h-10 bg-[#1a3a52] rounded-lg flex items-center justify-center group-hover:bg-[#FFD700] transition-colors"><iconify-icon icon="lucide:zap" class="text-white group-hover:text-[#1a3a52] text-xl"></iconify-icon></div><span class="text-2xl font-bold tracking-tight text-[#1a3a52]">JL <span class="text-[#FFD700]">&</span> Co</span></a><nav class="hidden lg:flex items-center gap-8"><a href="index.html" id="nav-home" class="font-medium transition-colors text-slate-600 hover:text-[#1a3a52]">Accueil</a><a href="services.html" id="nav-services" class="font-medium transition-colors text-slate-600 hover:text-[#1a3a52]">Services</a><a href="boutique.html" id="nav-boutique" class="font-medium transition-colors text-[#1a3a52] hover:text-[#FFD700]">Boutique</a><a href="apropos.html" id="nav-about" class="font-medium transition-colors text-slate-600 hover:text-[#1a3a52]">À propos</a><a href="contact.html" id="nav-contact" class="font-medium transition-colors text-slate-600 hover:text-[#1a3a52]">Contact</a></nav><div class="flex items-center gap-3"><a href="https://wa.me/50937257586?text=Bonjour%20JL%20%26%20Co%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20vos%20services." id="nav-whatsapp" class="hidden lg:flex items-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50 transition-all"><iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span></a></div><button id="mobile-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu-panel" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors"><iconify-icon icon="lucide:menu" class="text-2xl text-[#1a3a52]"></iconify-icon></button></div></header><div id="mobile-menu-panel" class="hidden lg:hidden fixed inset-x-0 top-20 z-40 bg-white border-b border-slate-200 shadow-lg"><a href="index.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Accueil</a><a href="services.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Services</a><a href="boutique.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-[#1a3a52] hover:bg-slate-50">Boutique</a><a href="apropos.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">À propos</a><a href="contact.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Contact</a><div class="p-4 flex flex-col gap-3"><a href="https://wa.me/50937257586?text=Bonjour%20JL%20%26%20Co%2C%20je%20souhaite%20en%20savoir%20plus%20sur%20vos%20services." class="flex items-center justify-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50 transition-all"><iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span></a></div></div><script>(function(){var btn=document.getElementById("mobile-menu-btn");var panel=document.getElementById("mobile-menu-panel");if(!btn||!panel)return;function close(){panel.classList.add("hidden");btn.setAttribute("aria-expanded","false");btn.querySelector("iconify-icon").setAttribute("icon","lucide:menu");}function open(){panel.classList.remove("hidden");btn.setAttribute("aria-expanded","true");btn.querySelector("iconify-icon").setAttribute("icon","lucide:x");}btn.addEventListener("click",function(e){e.stopPropagation();if(panel.classList.contains("hidden")){open();}else{close();}});panel.querySelectorAll("a").forEach(function(a){a.addEventListener("click",close);});document.addEventListener("click",function(e){if(!panel.classList.contains("hidden")&&!panel.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){close();}});document.addEventListener("keydown",function(e){if(e.key==="Escape")close();});window.addEventListener("resize",function(){if(window.innerWidth>=1024)close();});})();</script>
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <a href="index.html" id="nav-logo" class="flex items-center gap-2 group">
+      <div class="w-10 h-10 bg-[#1a3a52] rounded-lg flex items-center justify-center group-hover:bg-[#FFD700] transition-colors">
+        <iconify-icon icon="lucide:zap" class="text-white group-hover:text-[#1a3a52] text-xl"></iconify-icon>
+      </div>
+      <span class="text-2xl font-bold tracking-tight text-[#1a3a52]">JL <span class="text-[#FFD700]">&</span> Co</span>
+    </a>
+    <nav class="hidden lg:flex items-center gap-8">
+      <a href="index.html"    class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Accueil</a>
+      <a href="services.html" class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Services</a>
+      <a href="boutique.html" class="font-medium text-[#1a3a52] font-bold transition-colors">Boutique</a>
+      <a href="apropos.html"  class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">À propos</a>
+      <a href="contact.html"  class="font-medium text-slate-600 hover:text-[#1a3a52] transition-colors">Contact</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/50937257586" id="nav-whatsapp" class="hidden lg:flex items-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50 transition-all">
+        <iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span>
+      </a>
+      <!-- Cart button -->
+      <button id="cart-btn" class="relative flex items-center justify-center w-11 h-11 rounded-full bg-jl-dark text-white hover:bg-jl-yellow hover:text-jl-dark transition-all" aria-label="Panier">
+        <iconify-icon icon="lucide:shopping-cart" class="text-xl"></iconify-icon>
+        <span id="cart-count" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
+      </button>
+      <button id="mobile-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu-panel" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 transition-colors">
+        <iconify-icon icon="lucide:menu" class="text-2xl text-[#1a3a52]"></iconify-icon>
+      </button>
+    </div>
+  </div>
+</header>
+<div id="mobile-menu-panel" class="hidden lg:hidden fixed inset-x-0 top-20 z-40 bg-white border-b border-slate-200 shadow-lg">
+  <a href="index.html"    class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Accueil</a>
+  <a href="services.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Services</a>
+  <a href="boutique.html" class="block py-3 px-6 font-medium border-b border-slate-100 text-[#1a3a52] font-bold hover:bg-slate-50">Boutique</a>
+  <a href="apropos.html"  class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">À propos</a>
+  <a href="contact.html"  class="block py-3 px-6 font-medium border-b border-slate-100 text-slate-700 hover:bg-slate-50">Contact</a>
+  <div class="p-4 flex flex-col gap-3">
+    <a href="https://wa.me/50937257586" class="flex items-center justify-center gap-2 px-4 py-2 border border-green-500 text-green-600 rounded-full font-medium hover:bg-green-50">
+      <iconify-icon icon="logos:whatsapp-icon"></iconify-icon><span>WhatsApp</span>
+    </a>
+  </div>
 </div>
-<!-- /component: NavigationHeader (bd8156bc-ca96-4d42-b0b5-e2c280f904e2) --><main class="flex-1"><section class="bg-jl-dark py-12 text-white relative overflow-hidden"><div class="absolute inset-0 opacity-10"><div class="absolute inset-0" style="background-image: radial-gradient(#FFD700 1px, transparent 1px); background-size: 40px 40px;"></div></div><div class="max-w-7xl mx-auto px-6 relative z-10"><div class="flex items-center gap-2 text-sm text-slate-400 mb-4"><a href="index.html" id="breadcrumb-home" class="hover:text-jl-yellow">Accueil</a> <iconify-icon icon="lucide:chevron-right" class="text-xs"></iconify-icon> <span class="text-jl-yellow">Boutique</span></div><h1 class="text-4xl md:text-5xl font-bold">Notre Boutique <span class="text-jl-yellow">Énergétique</span></h1><p class="text-slate-400 mt-4 max-w-2xl">Trouvez les meilleurs équipements pour votre autonomie énergétique : panneaux haute performance, batteries longue durée et accessoires certifiés.</p></div></section><section class="max-w-7xl mx-auto px-6 py-12"><div class="bg-white p-4 rounded-2xl border border-slate-200 mb-8 flex flex-col md:flex-row gap-4 justify-between items-center"><div class="relative w-full md:w-96"><iconify-icon icon="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon> <input type="text" placeholder="Rechercher un produit..." class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-jl-dark/20 focus:border-jl-dark"></div><div class="flex items-center gap-3 w-full md:w-auto"><div class="relative" id="category-filter-wrap"><button id="category-filter-btn" aria-expanded="false" aria-controls="category-filter-menu" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-jl-dark text-sm font-medium text-jl-dark transition-colors"><iconify-icon icon="lucide:filter"></iconify-icon> <span>Catégories</span> <iconify-icon icon="lucide:chevron-down" class="text-xs"></iconify-icon></button><div id="category-filter-menu" class="hidden absolute right-0 md:left-0 mt-2 w-64 bg-white rounded-2xl border border-slate-200 shadow-xl p-2 z-20"><a href="boutique.html" id="cat-all" class="flex items-center justify-between px-4 py-2.5 rounded-xl bg-jl-dark text-white font-medium"><span>Tous les produits</span></a> <a href="boutique.html" id="cat-sol" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Panneaux Solaires</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">12</span></a> <a href="boutique.html" id="cat-bat" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Batteries Solaires</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">8</span></a> <a href="boutique.html" id="cat-ond" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Onduleurs</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">6</span></a> <a href="boutique.html" id="cat-mpp" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Contrôleurs MPPT/PWM</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">4</span></a> <a href="boutique.html" id="cat-gen" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Génératrices</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">5</span></a> <a href="boutique.html" id="cat-acc" class="flex items-center justify-between px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-colors"><span>Câbles & Accessoires</span> <span class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">15</span></a></div></div><span class="text-sm text-slate-500 whitespace-nowrap hidden md:inline">Trier par :</span> <select class="flex-1 md:flex-none px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-jl-dark/20 text-sm font-medium"><option>Pertinence</option><option>Prix croissant</option><option>Prix décroissant</option><option>Meilleures notes</option><option>Nouveautés</option></select> <a href="panier.html" id="cart-button-top" class="relative p-2.5 bg-slate-50 rounded-xl hover:bg-jl-yellow hover:text-jl-dark transition-all"><iconify-icon icon="lucide:shopping-cart" class="text-xl"></iconify-icon> <span class="absolute -top-1 -right-1 w-5 h-5 bg-jl-dark text-white text-[10px] font-bold rounded-full flex items-center justify-center">3</span></a></div></div><div><div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-solar-panel.jpg" alt="Panneau Solaire 400W" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">5</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Panneau Solaire 400W</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$350</span></div><button id="add-to-cart-0" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-battery.jpg" alt="Batterie Lithium 5kWh" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">Stock Limité</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.8</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Batterie Lithium 5kWh</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$2,500</span></div><button id="add-to-cart-1" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-inverter.jpg" alt="Onduleur Hybride 5kW" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.9</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Onduleur Hybride 5kW</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$1,800</span></div><button id="add-to-cart-2" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-mppt.jpg" alt="Contrôleur MPPT 60A" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.7</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Contrôleur MPPT 60A</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$450</span></div><button id="add-to-cart-3" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-generator.jpg" alt="Génératrice Diesel 10kW" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.5</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Génératrice Diesel 10kW</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$3,200</span></div><button id="add-to-cart-4" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-cables.jpg" alt="Câble Solaire 6mm²" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">5</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Câble Solaire 6mm²</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$25</span></div><button id="add-to-cart-5" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-solar-panel-2.jpg" alt="Panneau 550W Premium" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">5</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Panneau 550W Premium</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$650</span></div><button id="add-to-cart-6" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-battery-2.jpg" alt="Batterie LiFePO4 10kWh" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">Stock Limité</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.9</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Batterie LiFePO4 10kWh</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$4,500</span></div><button id="add-to-cart-7" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-inverter-2.jpg" alt="Onduleur Grid-Tie 8kW" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700">Rupture</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.6</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Onduleur Grid-Tie 8kW</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$2,100</span></div><button id="add-to-cart-8" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" disabled><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-pwm.jpg" alt="Contrôleur PWM 12V/60A" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.2</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Contrôleur PWM 12V/60A</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$280</span></div><button id="add-to-cart-9" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-kit.jpg" alt="Kit Complet Install" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">5</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Kit Complet Install</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$8,500</span></div><button id="add-to-cart-10" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div><div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:border-jl-yellow/40 transition-all duration-300"> <div class="relative aspect-square bg-slate-100 overflow-hidden"><img src="images/product-connectors.jpg" alt="Connecteurs MC4" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"> <div class="absolute top-3 left-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">En Stock</span></div><div class="absolute inset-0 bg-jl-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:eye"></iconify-icon></button><button class="w-10 h-10 bg-white text-jl-dark rounded-full flex items-center justify-center hover:bg-jl-yellow transition-colors"><iconify-icon icon="lucide:heart"></iconify-icon></button></div></div><div class="p-5"><div class="flex items-center gap-1 text-jl-yellow text-xs mb-2"><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon><iconify-icon icon="material-symbols:star"></iconify-icon> <span class="text-slate-400 ml-1">4.8</span></div><h4 class="font-bold text-jl-dark text-sm mb-1 group-hover:text-jl-yellow transition-colors truncate">Connecteurs MC4</h4><div class="flex items-end justify-between mt-4"><div class="flex flex-col"><span class="text-xs text-slate-400 font-medium">À partir de</span><span class="text-xl font-bold text-jl-dark">$15</span></div><button id="add-to-cart-11" class="w-10 h-10 bg-slate-50 text-jl-dark rounded-xl flex items-center justify-center hover:bg-jl-dark hover:text-white transition-all shadow-sm" ><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div></div><div class="mt-12 flex justify-center items-center gap-2"><button class="w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-white text-slate-400 transition-all cursor-not-allowed"><iconify-icon icon="lucide:chevron-left"></iconify-icon></button><button class="w-10 h-10 rounded-xl bg-jl-dark text-white font-bold">1</button><button class="w-10 h-10 rounded-xl border border-slate-200 hover:bg-white text-slate-600 transition-all">2</button><button class="w-10 h-10 rounded-xl border border-slate-200 hover:bg-white text-slate-600 transition-all">3</button><button class="w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-white text-slate-600 transition-all"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></div></div></section></main><!-- component: Footer (9e8f9d31-cc29-4e3b-bf80-f20cf1425c7e) -->
-<div>
-<footer class="bg-[#1a3a52] text-white pt-20 pb-10 border-t border-white/10"><div class="max-w-7xl mx-auto px-6"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16"><div class="space-y-6"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#FFD700] rounded flex items-center justify-center"><iconify-icon icon="lucide:zap" class="text-[#1a3a52]"></iconify-icon></div><span class="text-xl font-bold">JL & Co</span></div><p class="text-slate-400">Solutions énergétiques professionnelles pour particuliers et entreprises.</p><div class="flex gap-4"><a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#FFD700] hover:text-[#1a3a52] transition-all"><iconify-icon icon="mdi:facebook"></iconify-icon></a><a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#FFD700] hover:text-[#1a3a52] transition-all"><iconify-icon icon="mdi:linkedin"></iconify-icon></a><a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#FFD700] hover:text-[#1a3a52] transition-all"><iconify-icon icon="mdi:instagram"></iconify-icon></a></div></div><div><h4 class="font-bold text-lg mb-6">Services</h4><ul class="space-y-4 text-slate-400"><li class="hover:text-[#FFD700] transition-colors"><a href="services.html">Installations Solaires</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="services.html">Maintenance PV</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="services.html">Génératrices</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="services.html">Diagnostic Auto</a></li></ul></div><div><h4 class="font-bold text-lg mb-6">L'Entreprise</h4><ul class="space-y-4 text-slate-400"><li class="hover:text-[#FFD700] transition-colors"><a href="apropos.html">À Propos de Nous</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="boutique.html">Notre Boutique</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="index.html">Réalisations</a></li><li class="hover:text-[#FFD700] transition-colors"><a href="contact.html">Contact</a></li></ul></div><div><h4 class="font-bold text-lg mb-6">Contact</h4><ul class="space-y-4 text-slate-400"><li><span class="flex items-center gap-3"><iconify-icon icon="lucide:map-pin" class="text-[#FFD700]"></iconify-icon> Port-au-Prince, Haïti</span></li><li><span class="flex items-center gap-3"><iconify-icon icon="lucide:phone" class="text-[#FFD700]"></iconify-icon> +509 3659 2772</span></li><li><span class="flex items-center gap-3"><iconify-icon icon="lucide:mail" class="text-[#FFD700]"></iconify-icon> Venelsonliberus11@gmail.com</span></li></ul></div></div><div class="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm"><p>&copy; 2026 JL & Co. Tous droits réservés.</p><div class="flex gap-8"><a href="#" class="hover:text-white transition-colors">Mentions Légales</a><a href="#" class="hover:text-white transition-colors">Politique de Confidentialité</a></div></div></div></footer>
+<script>(function(){var btn=document.getElementById("mobile-menu-btn");var panel=document.getElementById("mobile-menu-panel");if(!btn||!panel)return;function close(){panel.classList.add("hidden");btn.setAttribute("aria-expanded","false");btn.querySelector("iconify-icon").setAttribute("icon","lucide:menu");}function open(){panel.classList.remove("hidden");btn.setAttribute("aria-expanded","true");btn.querySelector("iconify-icon").setAttribute("icon","lucide:x");}btn.addEventListener("click",function(e){e.stopPropagation();panel.classList.contains("hidden")?open():close();});panel.querySelectorAll("a").forEach(function(a){a.addEventListener("click",close);});document.addEventListener("click",function(e){if(!panel.classList.contains("hidden")&&!panel.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){close();}});document.addEventListener("keydown",function(e){if(e.key==="Escape")close();});window.addEventListener("resize",function(){if(window.innerWidth>=1024)close();});})();</script>
 </div>
-<!-- /component: Footer (9e8f9d31-cc29-4e3b-bf80-f20cf1425c7e) --></div>
-<!-- jlco-behavior-script -->
+<!-- ══════════════════ /NAV ══════════════════ -->
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="bg-jl-dark py-16 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-5" style="background-image:radial-gradient(#FFD700 1px,transparent 1px);background-size:32px 32px;"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <nav class="text-sm text-slate-400 mb-6 flex items-center gap-2">
+      <a href="index.html" class="hover:text-jl-yellow transition-colors">Accueil</a>
+      <span>›</span>
+      <span class="text-white font-medium">Boutique</span>
+    </nav>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-3">Notre Boutique <span class="text-jl-yellow">Énergétique</span></h1>
+    <p class="text-slate-300 text-lg max-w-2xl">Panneaux solaires, batteries, inverseurs et accessoires certifiés — livrés à travers tout Haïti.</p>
+    <!-- Stats -->
+    <div class="flex flex-wrap gap-8 mt-8 pt-8 border-t border-white/10">
+      <div><p class="text-xl font-black text-jl-yellow">Livraison</p><p class="text-xs text-slate-400 uppercase tracking-widest">Partout en Haïti</p></div>
+      <div><p class="text-xl font-black text-jl-yellow">Garantie</p><p class="text-xs text-slate-400 uppercase tracking-widest">Sur tous les produits</p></div>
+      <div><p class="text-xl font-black text-jl-yellow">Support</p><p class="text-xs text-slate-400 uppercase tracking-widest">Installation incluse</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main class="max-w-7xl mx-auto px-6 py-12">
+
+  <!-- Category pills -->
+  <div class="flex items-center gap-3 overflow-x-auto pb-2 mb-8 scrollbar-hide">
+    <button class="cat-pill active shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 font-bold text-sm transition-all hover:border-jl-dark" data-cat="">Tous les produits</button>
+    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Panneaux Solaires">☀️ Panneaux Solaires</button>
+    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Batteries">🔋 Batteries</button>
+    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Inverseurs">⚡ Inverseurs</button>
+    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Câblage">🔌 Câblage</button>
+    <button class="cat-pill shrink-0 px-5 py-2.5 rounded-full border-2 border-slate-200 text-slate-600 font-bold text-sm transition-all hover:border-jl-dark" data-cat="Accessoires">🔧 Accessoires</button>
+  </div>
+
+  <!-- Results count -->
+  <div class="flex items-center justify-between mb-6">
+    <p class="text-slate-500 text-sm"><span id="product-count">0</span> produit(s) disponible(s)</p>
+    <div class="flex items-center gap-2 text-sm text-slate-500">
+      <iconify-icon icon="lucide:info" class="text-base"></iconify-icon>
+      <span>Prix en HTG</span>
+    </div>
+  </div>
+
+  <!-- Product grid -->
+  <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <!-- Skeleton loaders -->
+    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
+    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden sm:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
+    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden lg:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
+    <div class="animate-pulse bg-white rounded-3xl overflow-hidden border border-slate-100 hidden xl:block"><div class="aspect-square bg-slate-100"></div><div class="p-5 space-y-3"><div class="h-3 bg-slate-100 rounded w-1/3"></div><div class="h-5 bg-slate-100 rounded w-3/4"></div><div class="h-7 bg-slate-100 rounded w-1/2"></div><div class="h-11 bg-slate-100 rounded-xl"></div></div></div>
+  </div>
+
+  <!-- Empty state (hidden by default) -->
+  <div id="empty-state" class="hidden text-center py-24">
+    <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <iconify-icon icon="lucide:package-open" class="text-slate-300 text-4xl"></iconify-icon>
+    </div>
+    <h3 class="text-xl font-bold text-jl-dark mb-2">Aucun produit dans cette catégorie</h3>
+    <p class="text-slate-400 mb-6">Revenez bientôt ou consultez toutes les catégories.</p>
+    <button class="cat-pill px-6 py-3 rounded-full bg-jl-dark text-white font-bold hover:bg-jl-yellow hover:text-jl-dark transition-all" data-cat="">Voir tous les produits</button>
+  </div>
+
+  <!-- CTA banner -->
+  <div class="mt-16 bg-jl-dark rounded-3xl overflow-hidden relative">
+    <div class="absolute inset-0 opacity-5" style="background-image:radial-gradient(#FFD700 1px,transparent 1px);background-size:32px 32px;"></div>
+    <div class="relative z-10 p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-8">
+      <div>
+        <p class="text-jl-yellow font-bold text-sm uppercase tracking-widest mb-2">Besoin d'un conseil ?</p>
+        <h3 class="text-2xl sm:text-3xl font-black text-white mb-2">Demandez un devis personnalisé</h3>
+        <p class="text-slate-400">Nos experts calculent la solution idéale pour votre consommation.</p>
+      </div>
+      <a href="/devis.html" class="shrink-0 px-8 py-4 bg-jl-yellow text-jl-dark font-black rounded-full hover:bg-yellow-400 transition-all hover:scale-105 whitespace-nowrap text-lg">Devis gratuit →</a>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="bg-[#1a3a52] text-white pt-16 pb-10 mt-16 border-t border-white/10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div class="space-y-4">
+        <div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#FFD700] rounded flex items-center justify-center"><iconify-icon icon="lucide:zap" class="text-[#1a3a52]"></iconify-icon></div><span class="text-xl font-bold">JL & Co</span></div>
+        <p class="text-slate-400 text-sm">Solutions énergétiques professionnelles pour particuliers et entreprises.</p>
+      </div>
+      <div><h4 class="font-bold text-lg mb-4">Services</h4><ul class="space-y-3 text-slate-400 text-sm"><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Installations Solaires</a></li><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Électricité</a></li><li><a href="services.html" class="hover:text-[#FFD700] transition-colors">Mécanique</a></li></ul></div>
+      <div><h4 class="font-bold text-lg mb-4">Liens utiles</h4><ul class="space-y-3 text-slate-400 text-sm"><li><a href="apropos.html" class="hover:text-[#FFD700] transition-colors">À propos</a></li><li><a href="devis.html" class="hover:text-[#FFD700] transition-colors">Devis gratuit</a></li><li><a href="contact.html" class="hover:text-[#FFD700] transition-colors">Contact</a></li></ul></div>
+      <div><h4 class="font-bold text-lg mb-4">Contact</h4><ul class="space-y-3 text-slate-400 text-sm"><li class="flex items-center gap-2"><iconify-icon icon="lucide:phone" class="text-[#FFD700]"></iconify-icon>+509 3659 2772</li><li class="flex items-center gap-2"><iconify-icon icon="lucide:mail" class="text-[#FFD700]"></iconify-icon>Venelsonliberus11@gmail.com</li></ul></div>
+    </div>
+    <div class="border-t border-white/10 pt-8 text-center text-slate-500 text-sm">&copy; 2026 JL & Co. Tous droits réservés.</div>
+  </div>
+</footer>
+
+<!-- ══════════════════ CART DRAWER ══════════════════ -->
+<!-- Overlay -->
+<div id="cart-overlay" class="fixed inset-0 bg-black/40 z-[60] opacity-0 pointer-events-none" aria-hidden="true"></div>
+
+<!-- Drawer -->
+<aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-[70] shadow-2xl flex flex-col transform translate-x-full" aria-label="Panier d'achat">
+  <!-- Drawer header -->
+  <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <iconify-icon icon="lucide:shopping-cart" class="text-jl-dark text-2xl"></iconify-icon>
+      <h2 class="text-xl font-black text-jl-dark">Mon Panier</h2>
+    </div>
+    <button id="cart-close" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors" aria-label="Fermer">
+      <iconify-icon icon="lucide:x" class="text-slate-600 text-lg"></iconify-icon>
+    </button>
+  </div>
+
+  <!-- Cart items -->
+  <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Cart empty state -->
+  <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center text-center px-6 hidden">
+    <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+      <iconify-icon icon="lucide:shopping-cart" class="text-slate-300 text-3xl"></iconify-icon>
+    </div>
+    <h3 class="font-bold text-jl-dark text-lg mb-1">Votre panier est vide</h3>
+    <p class="text-slate-400 text-sm">Ajoutez des produits pour commencer.</p>
+  </div>
+
+  <!-- Cart footer -->
+  <div id="cart-footer" class="hidden border-t border-slate-100 px-6 py-5 bg-slate-50 space-y-4">
+    <div class="flex items-center justify-between">
+      <span class="font-bold text-slate-600">Sous-total</span>
+      <span id="cart-subtotal" class="text-xl font-black text-jl-dark">0 HTG</span>
+    </div>
+    <p class="text-xs text-slate-400">Livraison et taxes calculées à la validation.</p>
+    <a href="/panier.html" class="w-full flex items-center justify-center gap-2 py-4 bg-jl-dark text-jl-yellow font-black rounded-2xl hover:bg-jl-yellow hover:text-jl-dark transition-all text-lg">
+      <iconify-icon icon="lucide:lock"></iconify-icon>
+      Finaliser la commande
+    </a>
+    <button id="cart-clear" class="w-full py-2 text-sm text-slate-400 hover:text-red-500 transition-colors">Vider le panier</button>
+  </div>
+</aside>
+
+<!-- Add-to-cart toast -->
+<div id="toast-cart" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] flex items-center gap-3 bg-jl-dark text-white px-6 py-3 rounded-full shadow-xl opacity-0 pointer-events-none" aria-live="polite">
+  <iconify-icon icon="lucide:check-circle" class="text-jl-yellow text-xl shrink-0"></iconify-icon>
+  <span id="toast-cart-text" class="font-medium text-sm">Produit ajouté au panier</span>
+</div>
+
+<!-- ══════════════════ SCRIPTS ══════════════════ -->
 <script>
 (function () {
-  var btn = document.getElementById('category-filter-btn');
-  var menu = document.getElementById('category-filter-menu');
-  var wrap = document.getElementById('category-filter-wrap');
-  if (!btn || !menu || !wrap) return;
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    var isOpen = menu.classList.toggle('hidden') === false;
-    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  'use strict';
+
+  // ── Cart state (localStorage) ──────────────────────────────────────────
+  var CART_KEY = 'jlco_cart_v1';
+
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e) { return []; }
+  }
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  var cart = loadCart();
+
+  // ── Products state ─────────────────────────────────────────────────────
+  var allProducts = [];
+  var activeCategory = '';
+
+  // ── DOM refs ──────────────────────────────────────────────────────────
+  var grid        = document.getElementById('product-grid');
+  var emptyState  = document.getElementById('empty-state');
+  var countEl     = document.getElementById('product-count');
+  var cartBtn     = document.getElementById('cart-btn');
+  var cartClose   = document.getElementById('cart-close');
+  var cartOverlay = document.getElementById('cart-overlay');
+  var cartDrawer  = document.getElementById('cart-drawer');
+  var cartItems   = document.getElementById('cart-items');
+  var cartEmptyEl = document.getElementById('cart-empty');
+  var cartFooter  = document.getElementById('cart-footer');
+  var cartCount   = document.getElementById('cart-count');
+  var cartSubtotal= document.getElementById('cart-subtotal');
+  var cartClear   = document.getElementById('cart-clear');
+  var toast       = document.getElementById('toast-cart');
+  var toastText   = document.getElementById('toast-cart-text');
+
+  // ── Cart drawer open/close ─────────────────────────────────────────────
+  function openCart()  {
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderCart();
+  }
+  function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  cartBtn.addEventListener('click', openCart);
+  cartClose.addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeCart(); });
+
+  // ── Cart badge ────────────────────────────────────────────────────────
+  function updateBadge() {
+    var total = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+    if (total > 0) {
+      cartCount.textContent = total > 99 ? '99+' : total;
+      cartCount.classList.remove('hidden');
+      cartCount.classList.add('flex');
+    } else {
+      cartCount.classList.add('hidden');
+      cartCount.classList.remove('flex');
+    }
+  }
+
+  // ── Render cart items ─────────────────────────────────────────────────
+  function renderCart() {
+    cart = loadCart();
+    updateBadge();
+    if (cart.length === 0) {
+      cartItems.innerHTML = '';
+      cartEmptyEl.classList.remove('hidden');
+      cartFooter.classList.add('hidden');
+      return;
+    }
+    cartEmptyEl.classList.add('hidden');
+    cartFooter.classList.remove('hidden');
+
+    var total = 0;
+    cartItems.innerHTML = cart.map(function(item) {
+      total += item.prix * item.qty;
+      var img = item.image
+        ? '<img src="' + esc(item.image) + '" class="w-full h-full object-cover">'
+        : '<div class="w-full h-full flex items-center justify-center text-slate-300"><iconify-icon icon="lucide:package" class="text-2xl"></iconify-icon></div>';
+      return '<div class="flex gap-4 items-start py-4 border-b border-slate-100 last:border-0" data-id="' + esc(item.id) + '">' +
+        '<div class="w-20 h-20 rounded-2xl bg-slate-100 overflow-hidden shrink-0">' + img + '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<p class="font-bold text-jl-dark text-sm leading-tight mb-1">' + esc(item.nom) + '</p>' +
+          '<p class="text-xs text-slate-400 mb-3">' + esc(item.categorie || 'Produit') + '</p>' +
+          '<div class="flex items-center gap-3">' +
+            '<div class="flex items-center border border-slate-200 rounded-xl overflow-hidden">' +
+              '<button class="qty-minus w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors text-lg font-bold" data-id="' + esc(item.id) + '">−</button>' +
+              '<span class="w-8 text-center text-sm font-bold text-jl-dark">' + item.qty + '</span>' +
+              '<button class="qty-plus w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors text-lg font-bold" data-id="' + esc(item.id) + '">+</button>' +
+            '</div>' +
+            '<p class="font-black text-jl-dark text-base">' + fmtPrice(item.prix * item.qty) + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<button class="item-remove shrink-0 w-7 h-7 rounded-full bg-slate-100 hover:bg-red-100 hover:text-red-500 flex items-center justify-center text-slate-400 transition-colors" data-id="' + esc(item.id) + '" aria-label="Supprimer">' +
+          '<iconify-icon icon="lucide:x" class="text-sm"></iconify-icon>' +
+        '</button>' +
+      '</div>';
+    }).join('');
+
+    cartSubtotal.textContent = fmtPrice(total);
+
+    // Qty & remove events
+    cartItems.querySelectorAll('.qty-plus').forEach(function(b) {
+      b.addEventListener('click', function() { changeQty(b.dataset.id, 1); });
+    });
+    cartItems.querySelectorAll('.qty-minus').forEach(function(b) {
+      b.addEventListener('click', function() { changeQty(b.dataset.id, -1); });
+    });
+    cartItems.querySelectorAll('.item-remove').forEach(function(b) {
+      b.addEventListener('click', function() { removeItem(b.dataset.id); });
+    });
+  }
+
+  function changeQty(id, delta) {
+    cart = loadCart();
+    var item = cart.find(function(i) { return i.id === id; });
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart(cart);
+    renderCart();
+  }
+  function removeItem(id) {
+    cart = loadCart();
+    cart = cart.filter(function(i) { return i.id !== id; });
+    saveCart(cart);
+    renderCart();
+  }
+  if (cartClear) {
+    cartClear.addEventListener('click', function() {
+      if (!confirm('Vider le panier ?')) return;
+      saveCart([]);
+      cart = [];
+      renderCart();
+    });
+  }
+
+  // ── Add to cart ───────────────────────────────────────────────────────
+  function addToCart(product) {
+    cart = loadCart();
+    var existing = cart.find(function(i) { return i.id === product.id; });
+    if (existing) { existing.qty++; }
+    else { cart.push({ id: product.id, nom: product.nom, prix: Number(product.prix) || 0, image: product.image || '', categorie: product.categorie || '', qty: 1 }); }
+    saveCart(cart);
+    updateBadge();
+    showToast(product.nom);
+  }
+
+  function showToast(name) {
+    toastText.textContent = '« ' + name + ' » ajouté au panier';
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(function() {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(12px)';
+    }, 2500);
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────────────
+  function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function fmtPrice(n) { return Number(n || 0).toLocaleString('fr-FR') + ' HTG'; }
+  function stockBadge(stock) {
+    if (!stock || stock === 'En stock') return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">EN STOCK</span>';
+    if (stock === 'Stock limité') return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">STOCK LIMITÉ</span>';
+    return '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-600">RUPTURE</span>';
+  }
+
+  // ── Render products ──────────────────────────────────────────────────
+  function renderProducts(products) {
+    countEl.textContent = products.length;
+    if (products.length === 0) {
+      grid.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      return;
+    }
+    emptyState.classList.add('hidden');
+
+    grid.innerHTML = products.map(function(p) {
+      var imgHtml = p.image
+        ? '<img src="' + esc(p.image) + '" alt="' + esc(p.nom) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">'
+        : '<div class="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-2"><iconify-icon icon="lucide:package" class="text-5xl"></iconify-icon><p class="text-xs">Photo à venir</p></div>';
+      var outOfStock = p.stock === 'Rupture de stock';
+
+      return '<div class="product-card bg-white rounded-3xl overflow-hidden border border-slate-100 flex flex-col">' +
+        '<div class="relative aspect-square bg-slate-50 overflow-hidden group">' +
+          imgHtml +
+          '<div class="absolute top-3 left-3">' + stockBadge(p.stock) + '</div>' +
+          '<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">' +
+            '<div class="w-9 h-9 bg-white rounded-full shadow flex items-center justify-center"><iconify-icon icon="lucide:zoom-in" class="text-jl-dark text-base"></iconify-icon></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="p-5 flex flex-col flex-1">' +
+          '<p class="text-xs font-bold text-jl-yellow uppercase tracking-widest mb-1">' + esc(p.categorie || 'Produit') + '</p>' +
+          '<h3 class="font-bold text-jl-dark text-base leading-tight mb-3 flex-1">' + esc(p.nom) + '</h3>' +
+          '<div class="flex items-end justify-between mb-4">' +
+            '<div>' +
+              '<p class="text-xs text-slate-400">Prix</p>' +
+              '<p class="text-2xl font-black text-jl-dark">' + fmtPrice(p.prix) + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<button class="add-to-cart-btn w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all ' +
+            (outOfStock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-jl-dark text-white hover:bg-jl-yellow hover:text-jl-dark') + '" ' +
+            'data-id="' + esc(p.id || p.nom) + '" ' +
+            (outOfStock ? 'disabled' : '') + '>' +
+            '<iconify-icon icon="lucide:shopping-cart" class="text-base"></iconify-icon>' +
+            (outOfStock ? 'Rupture de stock' : 'Ajouter au panier') +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // Attach add-to-cart handlers
+    grid.querySelectorAll('.add-to-cart-btn:not([disabled])').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = btn.dataset.id;
+        var p = allProducts.find(function(pr) { return (pr.id || pr.nom) === id; });
+        if (p) addToCart(p);
+      });
+    });
+  }
+
+  // ── Category filtering ────────────────────────────────────────────────
+  function filterProducts(cat) {
+    activeCategory = cat;
+    document.querySelectorAll('.cat-pill').forEach(function(pill) {
+      if (pill.dataset.cat === cat) { pill.classList.add('active'); }
+      else { pill.classList.remove('active'); }
+    });
+    var filtered = cat ? allProducts.filter(function(p) { return p.categorie === cat; }) : allProducts;
+    renderProducts(filtered);
+  }
+
+  document.querySelectorAll('.cat-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() { filterProducts(pill.dataset.cat); });
   });
-  document.addEventListener('click', function (e) {
-    if (!wrap.contains(e.target)) { menu.classList.add('hidden'); btn.setAttribute('aria-expanded', 'false'); }
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { menu.classList.add('hidden'); btn.setAttribute('aria-expanded', 'false'); }
-  });
+
+  // ── Load products from API ────────────────────────────────────────────
+  fetch('/api/produits')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      allProducts = data;
+      filterProducts(activeCategory);
+    })
+    .catch(function() {
+      // Show friendly error
+      grid.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400">' +
+        '<iconify-icon icon="lucide:wifi-off" class="text-5xl mb-4 block"></iconify-icon>' +
+        '<p class="font-medium">Impossible de charger les produits.</p>' +
+        '<p class="text-sm mt-1">Vérifiez votre connexion et rechargez la page.</p>' +
+        '</div>';
+    });
+
+  // ── Init badge ───────────────────────────────────────────────────────
+  updateBadge();
+
 })();
-document.querySelectorAll('[id^="add-to-cart-"]').forEach(function (btn) {
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    var original = btn.textContent;
-    btn.textContent = 'Ajouté ✓';
-    btn.classList.add('opacity-75');
-    setTimeout(function () { btn.textContent = original; btn.classList.remove('opacity-75'); }, 1200);
-  });
-});
-document.querySelectorAll('#contact-form, #contact-submit-btn').forEach(function (el) {
-  el.addEventListener('submit', function (e) { e.preventDefault(); alert('Merci ! Votre message a bien été envoyé. Notre équipe vous répondra sous 24h.'); el.reset && el.reset(); });
-});
-var payBtn = document.getElementById('cta-pay-now');
-if (payBtn) { payBtn.addEventListener('click', function (e) { e.preventDefault(); window.location.href = 'confirmation.html'; }); }
-document.querySelectorAll('[id^="side-"]').forEach(function (link) {
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
-    document.querySelectorAll('[id^="side-"]').forEach(function (l) { l.classList.remove('bg-jl-yellow', 'text-jl-dark'); l.classList.add('text-white'); });
-    link.classList.remove('text-white');
-    link.classList.add('bg-jl-yellow', 'text-jl-dark');
-  });
-});
 </script>
-<script src="/auth.js"></script></body></html>
+<script src="/auth.js"></script>
+</body>
+</html>

@@ -39,6 +39,8 @@
       <div class="w-16 h-16 bg-jl-dark rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
         <iconify-icon icon="lucide:zap" class="text-jl-yellow text-3xl animate-spin"></iconify-icon>
       </div>
+      <p class="text-slate-400 mt-4 text-sm">Vérification de l'accès...</p>
+      <a id="auth-fallback-link" href="/login.html" style="display:none" class="mt-4 inline-block px-5 py-2 bg-jl-dark text-jl-yellow font-bold rounded-full text-sm hover:bg-yellow-400 hover:text-jl-dark transition-all">← Aller à la connexion</a>
       <p class="text-slate-500 font-medium">Vérification de l'accès…</p>
     </div>
   </div>
@@ -372,7 +374,25 @@
   </div>
 
   <!-- ══ SCRIPTS ──────────────────────────────────────────────────────────── -->
-  <script type="module">
+  <!-- Fallback: runs even if Firebase CDN fails to load -->
+  <script>
+    (function() {
+      // Show a login link after 6 seconds
+      var linkTimer = setTimeout(function() {
+        var el = document.getElementById('auth-fallback-link');
+        if (el) el.style.display = '';
+      }, 6000);
+      // Hard redirect after 14 seconds
+      window._dashHardTimeout = setTimeout(function() {
+        window.location.href = '/login.html?retry=1';
+      }, 14000);
+      window._clearDashTimeouts = function() {
+        clearTimeout(linkTimer);
+        clearTimeout(window._dashHardTimeout);
+      };
+    })();
+  </script>
+    <script type="module">
     import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
@@ -799,6 +819,7 @@
 
       if (!cfg.configured || !cfg.firebase.apiKey) {
         // No Firebase → show dashboard without auth (dev mode)
+        if (window._clearDashTimeouts) window._clearDashTimeouts();
         $('auth-loading').classList.add('hidden');
         $('user-email').textContent = 'Mode dev (sans auth)';
         loadDash();
@@ -808,7 +829,14 @@
       const app = getApps().length === 0 ? initializeApp(cfg.firebase) : getApp();
       const auth = getAuth(app);
 
+      // Safety: if Firebase doesn't resolve within 10 s, bounce to login
+      const authTimeout = setTimeout(() => {
+        window.location.href = '/login.html?error=timeout';
+      }, 10000);
+
       onAuthStateChanged(auth, user => {
+        clearTimeout(authTimeout);
+        if (window._clearDashTimeouts) window._clearDashTimeouts();
         $('auth-loading').classList.add('hidden');
         if (!user || !adminEmails.includes(user.email.toLowerCase())) {
           window.location.href = '/login.html';
@@ -829,6 +857,7 @@
       });
 
     } catch(e) {
+      if (window._clearDashTimeouts) window._clearDashTimeouts();
       $('auth-loading').classList.add('hidden');
       loadDash();
     }

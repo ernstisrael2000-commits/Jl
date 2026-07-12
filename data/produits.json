@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "pan-mono-400w",
+    "nom": "Panneau Solaire Monocristallin 400W",
+    "categorie": "Panneaux Solaires",
+    "prix": 18500,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
+    "description": "Panneau haute performance, rendement 21%, cadre aluminium anodisé, garantie 25 ans."
+  },
+  {
+    "id": "bat-lifepo4-100ah",
+    "nom": "Batterie LiFePO4 100Ah 12V",
+    "categorie": "Batteries",
+    "prix": 32000,
+    "stock": "Stock limité",
+    "image": "https://images.unsplash.com/photo-1616763355548-1b606f439f86?w=600&q=80",
+    "description": "Batterie lithium fer phosphate, 2000+ cycles, BMS intégré, 5 ans de garantie."
+  },
+  {
+    "id": "inv-hybride-5kw",
+    "nom": "Inverseur Hybride 5kW 48V",
+    "categorie": "Inverseurs",
+    "prix": 55000,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=600&q=80",
+    "description": "Inverseur hybride MPPT intégré, Wi-Fi monitoring, compatible grid et off-grid."
+  },
+  {
+    "id": "ctrl-mppt-60a",
+    "nom": "Régulateur de Charge MPPT 60A",
+    "categorie": "Accessoires",
+    "prix": 12500,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=600&q=80",
+    "description": "Contrôleur MPPT 12V/24V/48V auto, écran LCD, protection multi-niveaux."
+  },
+  {
+    "id": "pan-poly-300w",
+    "nom": "Panneau Solaire Polycristallin 300W",
+    "categorie": "Panneaux Solaires",
+    "prix": 12000,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&q=80",
+    "description": "Panneau économique, rendement 18%, idéal pour les installations résidentielles."
+  },
+  {
+    "id": "bat-agm-200ah",
+    "nom": "Batterie AGM Solaire 200Ah 12V",
+    "categorie": "Batteries",
+    "prix": 18000,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1555664069-7e0f85e0b82e?w=600&q=80",
+    "description": "Batterie sans entretien, décharge profonde, parfaite pour les systèmes solaires."
+  },
+  {
+    "id": "cab-sol-6mm",
+    "nom": "Câble Solaire 6mm² (rouleau 100m)",
+    "categorie": "Câblage",
+    "prix": 8500,
+    "stock": "En stock",
+    "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
+    "description": "Câble double isolation UV, résistant aux intempéries, certifié TÜV."
+  },
+  {
+    "id": "inv-pur-sinus-3kw",
+    "nom": "Onduleur Pur Sinus 3000W 24V",
+    "categorie": "Inverseurs",
+    "prix": 28000,
+    "stock": "Stock limité",
+    "image": "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=600&q=80",
+    "description": "Onduleur pur sinus, rendement 93%, protection surcharge et court-circuit."
+  }
+]
