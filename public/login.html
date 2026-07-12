@@ -291,7 +291,7 @@
     try {
       const who = await fetch('/api/whoami', { credentials: 'include' }).then(r => r.ok ? r.json() : null);
       if (who && who.email) {
-        const next = new URLSearchParams(window.location.search).get('next') || '/';
+        const next = new URLSearchParams(window.location.search).get('next') || '/boutique.html';
         window.location.href = who.isAdmin ? '/dashboard.html' : next;
       }
     } catch (e) { /* not logged in — stay on the page */ }
@@ -303,7 +303,7 @@
     // state — which is what makes this reliable across popups, redirects,
     // and mobile/in-app browsers.
     async function establishSession(user) {
-      const next = new URLSearchParams(window.location.search).get('next') || '/';
+      const next = new URLSearchParams(window.location.search).get('next') || '/boutique.html';
       try {
         const idToken = await user.getIdToken(true);
         const resp = await fetch('/api/session', {

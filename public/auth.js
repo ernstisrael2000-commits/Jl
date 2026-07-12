@@ -126,10 +126,17 @@
   }
 
   /* ─── Homepage ──────────────────────────────────────────────────────────── */
-  // The homepage is the same marketing page for every visitor, logged in or
-  // not — the site is multipage by design, so login only changes the nav
-  // (account button, admin link), never which page/section is shown.
-  function updateHomepage(user) { /* intentionally a no-op */ }
+  // The marketing homepage (hero, "Demander un devis"...) is meant for
+  // prospective visitors. Once a customer is logged in, landing on "/" (or
+  // "/index.html") sends them straight to the Boutique instead of showing
+  // that logged-out landing page again.
+  function updateHomepage(user) {
+    if (!user) return;
+    var path = window.location.pathname;
+    if (path === '/' || path === '' || /\/index\.html$/.test(path)) {
+      window.location.replace('/boutique.html');
+    }
+  }
 
   /* ─── Auth guards ───────────────────────────────────────────────────────── */
   function setupGuards() {

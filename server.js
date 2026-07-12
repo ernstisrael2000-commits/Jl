@@ -269,6 +269,7 @@ async function handleAPI(req, res, urlPath) {
     if (method === "POST") {
       if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
       const body = await parseBody(req);
+      if (body.prix != null) body.prix = Math.max(0, Math.min(10000, Number(body.prix) || 0));
       const items = readData("produits");
       const item = {
         ...body,
@@ -289,6 +290,7 @@ async function handleAPI(req, res, urlPath) {
     }
     if (method === "PUT") {
       const body = await parseBody(req);
+      if (body.prix != null) body.prix = Math.max(0, Math.min(10000, Number(body.prix) || 0));
       let items = readData("produits");
       items = items.map((p) => (p.id === id ? { ...p, ...body, id } : p));
       writeData("produits", items);
