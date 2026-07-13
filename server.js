@@ -154,6 +154,34 @@ function writeData(name, items) {
   if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
 });
 
+// ── Réglages du site (taxe/frais + coordonnées du développeur) ──────────────
+// Fichier objet (pas un tableau) : { taxeActive, taxeTaux, taxeLabel, dev }.
+// Les coordonnées du développeur sont fixes (fournies par le développeur),
+// seule la taxe est modifiable depuis le dashboard admin.
+const SETTINGS_FILE = path.join(DATA_DIR, "reglages.json");
+const DEFAULT_SETTINGS = {
+  taxeActive: true,
+  taxeTaux: 20,
+  taxeLabel: "Taxes estimées",
+  dev: {
+    entreprise: "Rena Dev",
+    whatsapp: "+50940274789",
+    email: "neopayservices509@gmail.com",
+  },
+};
+function readSettings() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(SETTINGS_FILE, "utf8"));
+    return { ...DEFAULT_SETTINGS, ...raw, dev: { ...DEFAULT_SETTINGS.dev, ...(raw.dev || {}) } };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+function writeSettings(settings) {
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+}
+if (!fs.existsSync(SETTINGS_FILE)) writeSettings(DEFAULT_SETTINGS);
+
 function parseBody(req) {
   return new Promise((resolve) => {
     let body = "";
@@ -434,6 +462,25 @@ async function handleAPI(req, res, urlPath) {
       items = items.filter((c) => c.id !== id);
       writeData("contacts", items);
       return jsonRes(res, 200, { ok: true });
+    }
+  }
+
+  // ── /api/settings ──────────────────────────────────────────────────────
+  // Réglages du site (taxe/frais appliqués au paiement + coordonnées du
+  // développeur). Lecture publique (utilisée par panier.html/paiement.html
+  // pour calculer la taxe et par le dashboard) ; écriture admin uniquement.
+  if (urlPath === "/api/settings") {
+    if (method === "GET") return jsonRes(res, 200, readSettings());
+    if (method === "PUT") {
+      if (!(await getAdminSession(req))) return jsonRes(res, 401, { error: "Accès admin requis." });
+      const body = await parseBody(req);
+      const current = readSettings();
+      const next = { ...current };
+      if (body.taxeActive != null) next.taxeActive = !!body.taxeActive;
+      if (body.taxeTaux != null) next.taxeTaux = Math.max(0, Math.min(100, Number(body.taxeTaux) || 0));
+      if (typeof body.taxeLabel === "string" && body.taxeLabel.trim()) next.taxeLabel = body.taxeLabel.trim();
+      writeSettings(next);
+      return jsonRes(res, 200, next);
     }
   }
 

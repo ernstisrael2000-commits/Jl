@@ -86,6 +86,16 @@
         <span>Messages</span>
         <span id="badge-messages" class="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-jl-yellow text-jl-dark font-bold hidden"></span>
       </button>
+      <button data-section="settings" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+        <iconify-icon icon="lucide:percent" class="text-xl shrink-0"></iconify-icon>
+        <span>Taxes &amp; Frais</span>
+      </button>
+      <div class="pt-4 mt-4 border-t border-white/10">
+        <button data-section="developer" class="nav-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-slate-300 hover:bg-white/5 hover:text-white">
+          <iconify-icon icon="lucide:code-2" class="text-xl shrink-0"></iconify-icon>
+          <span>Contacter le développeur</span>
+        </button>
+      </div>
     </nav>
 
     <div class="p-4 border-t border-white/10">
@@ -290,6 +300,88 @@
         </div>
       </div>
 
+      <!-- ══ SECTION: TAXES & FRAIS ════════════════════════════════════════ -->
+      <div id="section-settings" class="section space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-jl-dark">Taxes &amp; Frais</h2>
+          <p class="text-sm text-slate-500 mt-1">Contrôlez la taxe appliquée au paiement sur votre boutique.</p>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 max-w-xl">
+          <form id="settings-form" class="space-y-6">
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+              <div>
+                <p class="font-bold text-jl-dark">Appliquer une taxe</p>
+                <p class="text-xs text-slate-500 mt-0.5">Désactivez pour ne facturer aucune taxe aux clients.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                <input type="checkbox" id="s-taxe-active" class="sr-only peer">
+                <div class="w-12 h-7 bg-slate-300 peer-checked:bg-jl-dark rounded-full transition-all"></div>
+                <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
+              </label>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-jl-dark mb-2">Nom affiché au client</label>
+              <input id="s-taxe-label" type="text" placeholder="Ex: Taxes estimées"
+                class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-jl-dark mb-2">Taux de taxe (%)</label>
+              <input id="s-taxe-taux" type="number" min="0" max="100" step="0.1" placeholder="20"
+                class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 transition-all text-sm">
+              <p class="text-xs text-slate-400 mt-1">Ce taux est appliqué au sous-total du panier sur les pages Panier et Paiement.</p>
+            </div>
+            <div id="settings-form-error" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700"></div>
+            <div class="flex gap-3 pt-2">
+              <button type="button" id="settings-remove-btn" class="flex-1 py-3 border border-red-200 text-red-600 rounded-2xl font-bold hover:bg-red-50 transition-all">
+                Supprimer la taxe
+              </button>
+              <button type="submit" class="flex-1 py-3 bg-jl-dark text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg">
+                Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ══ SECTION: CONTACTER LE DÉVELOPPEUR ═════════════════════════════ -->
+      <div id="section-developer" class="section space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-jl-dark">Contacter le développeur</h2>
+          <p class="text-sm text-slate-500 mt-1">Coordonnées de la compagnie qui a développé ce site web.</p>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 max-w-xl">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-jl-dark flex items-center justify-center shrink-0">
+              <iconify-icon icon="lucide:code-2" class="text-jl-yellow text-2xl"></iconify-icon>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Développé par</p>
+              <p id="dev-company" class="text-xl font-bold text-jl-dark">—</p>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <a id="dev-whatsapp-link" href="#" target="_blank" class="flex items-center gap-4 p-4 bg-slate-50 hover:bg-green-50 rounded-2xl transition-all group">
+              <div class="w-11 h-11 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-xl shrink-0">
+                <iconify-icon icon="ic:baseline-whatsapp"></iconify-icon>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">WhatsApp</p>
+                <p id="dev-whatsapp" class="font-bold text-slate-700 truncate">—</p>
+              </div>
+            </a>
+            <a id="dev-email-link" href="#" class="flex items-center gap-4 p-4 bg-slate-50 hover:bg-blue-50 rounded-2xl transition-all group">
+              <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                <iconify-icon icon="lucide:mail"></iconify-icon>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Email</p>
+                <p id="dev-email" class="font-bold text-slate-700 truncate">—</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /overflow-y-auto -->
   </main>
 
@@ -427,8 +519,8 @@
     $('header-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
     // ── Navigation ───────────────────────────────────────────────────────
-    const sections = ['dash','products','orders','quotes','messages'];
-    const titles = { dash:'Vue d\'ensemble', products:'Produits', orders:'Commandes', quotes:'Demandes de devis', messages:'Messages' };
+    const sections = ['dash','products','orders','quotes','messages','settings','developer'];
+    const titles = { dash:'Vue d\'ensemble', products:'Produits', orders:'Commandes', quotes:'Demandes de devis', messages:'Messages', settings:'Taxes & Frais', developer:'Contacter le développeur' };
 
     function showSection(name) {
       sections.forEach(s => {
@@ -655,6 +747,56 @@
       if (name === 'orders') return loadOrders();
       if (name === 'quotes') return loadQuotes();
       if (name === 'messages') return loadMessages();
+      if (name === 'settings') return loadSettings();
+      if (name === 'developer') return loadDeveloper();
+    }
+
+    // ── Taxes & Frais ─────────────────────────────────────────────────────
+    async function loadSettings() {
+      const s = await api('GET', '/api/settings');
+      $('s-taxe-active').checked = !!s.taxeActive;
+      $('s-taxe-label').value = s.taxeLabel || 'Taxes estimées';
+      $('s-taxe-taux').value = s.taxeTaux != null ? s.taxeTaux : 20;
+      $('settings-form-error').classList.add('hidden');
+    }
+
+    $('settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await api('PUT', '/api/settings', {
+          taxeActive: $('s-taxe-active').checked,
+          taxeLabel: $('s-taxe-label').value.trim() || 'Taxes estimées',
+          taxeTaux: parseFloat($('s-taxe-taux').value) || 0,
+        });
+        showToast('Réglages enregistrés !');
+      } catch (err) {
+        const errEl = $('settings-form-error');
+        errEl.textContent = 'Erreur : ' + err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+
+    $('settings-remove-btn').addEventListener('click', async () => {
+      if (!confirm('Supprimer la taxe ? Plus aucune taxe ne sera facturée aux clients.')) return;
+      try {
+        await api('PUT', '/api/settings', { taxeActive: false, taxeTaux: 0 });
+        showToast('Taxe supprimée.');
+        loadSettings();
+      } catch (err) {
+        showToast('Erreur : ' + err.message, false);
+      }
+    });
+
+    // ── Contacter le développeur ──────────────────────────────────────────
+    async function loadDeveloper() {
+      const s = await api('GET', '/api/settings');
+      const dev = s.dev || {};
+      $('dev-company').textContent = dev.entreprise || '—';
+      $('dev-whatsapp').textContent = dev.whatsapp || '—';
+      $('dev-email').textContent = dev.email || '—';
+      const waDigits = (dev.whatsapp || '').replace(/[^0-9]/g, '');
+      $('dev-whatsapp-link').href = waDigits ? `https://wa.me/${waDigits}` : '#';
+      $('dev-email-link').href = dev.email ? `mailto:${dev.email}` : '#';
     }
 
     // ── Product CRUD ──────────────────────────────────────────────────────

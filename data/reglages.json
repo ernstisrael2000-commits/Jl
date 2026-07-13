@@ -1,0 +1,10 @@
+{
+  "taxeActive": true,
+  "taxeTaux": 20,
+  "taxeLabel": "Taxes estimées",
+  "dev": {
+    "entreprise": "Rena Dev",
+    "whatsapp": "+50940274789",
+    "email": "neopayservices509@gmail.com"
+  }
+}
