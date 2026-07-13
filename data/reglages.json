@@ -1,6 +1,6 @@
 {
   "taxeActive": true,
-  "taxeTaux": 20,
+  "taxeTaux": 2,
   "taxeLabel": "Taxes estimées",
   "dev": {
     "entreprise": "Rena Dev",

@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const zlib = require("zlib");
 const admin = require("firebase-admin");
 
 const PORT = process.env.PORT || 5000;
@@ -620,8 +621,7 @@ const server = http.createServer((req, res) => {
           res.end("Erreur serveur");
           return;
         }
-        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
-        res.end(data);
+        sendCompressed(req, res, 200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" }, data);
       });
     });
     return;
@@ -646,13 +646,40 @@ const server = http.createServer((req, res) => {
       return;
     }
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, {
+    // Images/icons rarely change and aren't part of active edits, so let
+    // browsers cache them across visits instead of re-fetching every time.
+    // HTML/CSS/JS stay "no-cache" since this site is still being iterated on.
+    const isCacheableAsset = [".png", ".jpg", ".jpeg", ".svg", ".ico"].includes(ext);
+    const headers = {
       "Content-Type": MIME[ext] || "application/octet-stream",
-      "Cache-Control": "no-cache",
-    });
-    res.end(data);
+      "Cache-Control": isCacheableAsset ? "public, max-age=86400" : "no-cache",
+    };
+    sendCompressed(req, res, 200, headers, data);
   });
 });
+
+// Compresses text-ish responses with gzip when the client supports it, to cut
+// transfer size/time over the network. Skips already-compressed formats
+// (images) since gzip gives negligible benefit there and just wastes CPU.
+function sendCompressed(req, res, statusCode, headers, data) {
+  const contentType = headers["Content-Type"] || "";
+  const isCompressible = /text|javascript|json|svg/.test(contentType);
+  const acceptEncoding = req.headers["accept-encoding"] || "";
+  if (isCompressible && acceptEncoding.includes("gzip") && data.length > 256) {
+    zlib.gzip(data, (err, compressed) => {
+      if (err) {
+        res.writeHead(statusCode, headers);
+        res.end(data);
+        return;
+      }
+      res.writeHead(statusCode, { ...headers, "Content-Encoding": "gzip", Vary: "Accept-Encoding" });
+      res.end(compressed);
+    });
+  } else {
+    res.writeHead(statusCode, headers);
+    res.end(data);
+  }
+}
 
 server.on("error", (err) => {
   if (err.code === "EADDRINUSE") {
